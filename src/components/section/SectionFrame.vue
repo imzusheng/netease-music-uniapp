@@ -1,0 +1,87 @@
+<!--
+Author: zusheng
+Date: 2022-04-30 21:25:28
+LastEditTime: 2022-05-11 23:31:46
+Description: 主页列表通用框架
+FilePath: \uni-preset-vue-vite-ts\src\components\section\SectionFrame.vue
+-->
+
+<script lang="ts" setup>
+const props = defineProps<{
+  // 分区标题
+  title: string
+
+  // 显示更多按钮
+  more: boolean
+}>()
+</script>
+
+<template>
+  <view class="section-card">
+    <slot name="title">
+      <!-- 标题 -->
+      <view class="section-card__title">
+        <text>{{ props.title }}</text>
+        <!-- 查看更多按钮 -->
+        <view class="section-card__title-btn" v-if="props.more">
+          <text>更多</text>
+          <!-- 更多图标 -->
+          <view class="section-card__title-btn-icon" />
+        </view>
+      </view>
+    </slot>
+
+    <!-- main slot s -->
+    <slot></slot>
+    <!-- main slot e -->
+  </view>
+</template>
+
+<style lang="less">
+.section-card {
+  // 标题高度
+  --title-height: 48rpx;
+
+  background-color: #fff;
+  padding: 28.8rpx 0 38.4rpx;
+  margin-bottom: 19rpx;
+  border-radius: 24rpx;
+  position: relative;
+
+  // 标题栏
+  .section-card__title {
+    height: var(--title-height);
+    width: 100%;
+    font-size: 34.5rpx;
+    font-weight: 600;
+    display: flex;
+    justify-content: space-between;
+    box-sizing: border-box;
+    padding: 0 var(--page-spacing);
+    // 更多按钮
+    .section-card__title-btn {
+      height: var(--title-height);
+      padding: 0 24rpx;
+      color: rgb(51, 51, 52);
+      font-size: 22rpx;
+      font-weight: 400;
+      border-radius: 24rpx;
+      border: 1px solid rgb(230, 230, 230);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      // 按钮图标
+      .section-card__title-btn-icon {
+        height: 18rpx;
+        width: 18rpx;
+        margin-left: 4rpx;
+        background-color: rgb(51, 51, 52);
+        mask-image: url('@/static/icon-arrow-right.png');
+        mask-size: auto 100%;
+        mask-position: center;
+        mask-repeat: no-repeat;
+      }
+    }
+  }
+}
+</style>
