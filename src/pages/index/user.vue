@@ -1,7 +1,7 @@
 <!--
 Author: zusheng
 Date: 2022-05-08 16:47:28
-LastEditTime: 2022-05-14 17:32:53
+LastEditTime: 2022-05-14 22:37:56
 Description: 用户主页
 FilePath: \uni-preset-vue-vite-ts\src\pages\index\user.vue
 -->
@@ -144,8 +144,7 @@ function openPopup() {
     :title="navShow ? data.user.name : ''"
     :back="false"
     :filter="false"
-    title-color="black"
-    :theme-color="!navShow ? '0,0,0,0' : '255,255,255,1'"
+    :bg="(navShow as boolean)"
   />
 
   <the-popup-login />
@@ -274,7 +273,11 @@ function openPopup() {
   width: 100%;
   min-height: calc(100vh - var(--window-bottom));
   box-sizing: border-box;
-  background: linear-gradient(to bottom, rgb(240, 239, 239), #f8f8f8);
+  background: linear-gradient(
+    to bottom,
+    var(--theme-background-color),
+    var(--theme-background-color)
+  );
   position: relative;
 
   .user-wrap-bg {
@@ -297,19 +300,10 @@ function openPopup() {
     box-sizing: border-box;
     padding: 0 30.7rpx;
 
-    .user-main-register {
-      width: 100%;
-      background-color: #fff;
-      border-radius: 28.85rpx;
-      font-size: 34.5rpx;
-      font-weight: 400;
-      padding: 30rpx;
-    }
-
     // 用户信息
     .user-main-info {
       width: 100%;
-      background-color: #fff;
+      background-color: var(--theme-background-color-card);
       border-radius: 28.85rpx;
       position: relative;
       box-sizing: border-box;
@@ -318,7 +312,7 @@ function openPopup() {
 
       //  头像
       .user-avatar-not-register {
-        background-color: rgb(254, 254, 254);
+        background-color: var(--theme-background-color-card);
         border-radius: 50%;
       }
       .user-main-info__user-avatar {
@@ -339,12 +333,13 @@ function openPopup() {
         line-height: 82.7rpx;
         font-weight: 600;
         text-align: center;
+        color: var(--theme-text-title-color);
       }
 
       // 描述
       .user-main-info__user-sub {
         font-size: 32rpx;
-        color: rgba(152, 152, 152, 1);
+        color: var(--theme-text-sub-color);
         margin-bottom: 14rpx;
         text-align: center;
       }
@@ -357,9 +352,9 @@ function openPopup() {
       margin-top: 30.7rpx;
       .user-main__playlist-wrap-spacing {
         padding: 0 30rpx;
-        background: #fff;
         box-sizing: border-box;
         border-radius: 33rpx;
+        background-color: var(--theme-background-color-card);
 
         // 为空
         .user-main__playlist-spacing-empty {
@@ -391,11 +386,12 @@ function openPopup() {
               .user-main__playlist-title {
                 font-size: 30.7rpx;
                 width: 100%;
+                color: var(--theme-text-title-color);
               }
               .user-main__playlist-sub {
                 font-size: 23rpx;
                 width: 100%;
-                color: rgba(0, 0, 0, 0.6);
+                color: var(--theme-text-sub-color);
               }
             }
           }

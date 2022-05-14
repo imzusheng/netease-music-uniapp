@@ -1,7 +1,7 @@
 <!--
 Author: zusheng
 Date: 2022-04-24 11:36:12
-LastEditTime: 2022-05-14 17:41:17
+LastEditTime: 2022-05-14 21:25:43
 Description: 滚动列表单项
 FilePath: \uni-preset-vue-vite-ts\src\components\section\SectionFramePlaylistScroll.vue
 -->
@@ -126,6 +126,7 @@ function toDetail() {
     .section-card__item-title {
       font-size: 24rpx;
       margin-top: 14rpx;
+      color: var(--theme-text-title-color);
     }
   }
 }

@@ -10,7 +10,7 @@ import SectionTopic from '@/components/section/SectionTopic.vue'
 import SectionTablist from '@/components/section/SectionTablist.vue'
 import SectionMusicCalendar from '@/components/section/SectionMusicCalendar.vue'
 import { onPullDownRefresh } from '@dcloudio/uni-app'
-import { reactive, toRaw } from 'vue'
+import { reactive, computed } from 'vue'
 import { useStore } from '@/store'
 
 const store = useStore()
@@ -30,6 +30,8 @@ const data = reactive<any>({
   homepage_music_calendar: {},
   homepage_voicelist_rcmd: {}
 })
+
+store.setTheme('raw')
 
 onPullDownRefresh(() => {
   Object.assign(data, {
@@ -76,19 +78,15 @@ async function getAllData() {
     data.loading = false
   }
 }
+
+const pageStyle = computed(() => store.getPageMetaStyle)
 </script>
 
 <template>
-  <page-meta :page-style="store.getPageMetaStyle" />
+  <page-meta :page-style="pageStyle" />
 
   <!-- ↓ 自定义导航 -->
-  <the-nav-bar
-    :title="'现在就听'"
-    :back="false"
-    :filter="true"
-    title-color="black"
-    theme-color="252, 252, 252, 0.7"
-  />
+  <the-nav-bar :title="'现在就听'" :back="false" :filter="true" :bg="true" />
 
   <!-- ↓ 播放器 -->
   <the-player-bottom-bar />
@@ -178,7 +176,7 @@ async function getAllData() {
       :data="[data.homepage_voicelist_rcmd.bodcastList, data.homepage_voicelist_rcmd.voiceList]"
     />
 
-    <view v-if="data.loading" class="loading">加载中</view>
+    <view v-if="data.loading" class="loading">加载中...</view>
   </view>
 </template>
 
@@ -188,7 +186,7 @@ async function getAllData() {
   --page-spacing: 32rpx;
   width: 100%;
   min-height: 100vh;
-  background: rgb(248, 248, 248);
+  background: var(--theme-background-color);
   transition: opacity 0.5s;
 
   .loading {
@@ -199,7 +197,10 @@ async function getAllData() {
   }
 
   .home-banner {
-    background: linear-gradient(rgb(246, 247, 247), #fff);
+    background: linear-gradient(
+      var(--theme-background-color-card),
+      var(--theme-background-color-card)
+    );
     overflow: hidden;
   }
 }

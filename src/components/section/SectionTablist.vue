@@ -1,7 +1,7 @@
 <!--
 Author: zusheng
 Date: 2022-05-01 10:48:15
-LastEditTime: 2022-05-11 23:24:43
+LastEditTime: 2022-05-15 00:03:10
 Description: 首页分区-tab歌曲列表
 FilePath: \uni-preset-vue-vite-ts\src\components\section\SectionTablist.vue
 -->
@@ -9,7 +9,6 @@ FilePath: \uni-preset-vue-vite-ts\src\components\section\SectionTablist.vue
 <script lang="ts" setup>
 import SectionFrame from '@/components/section/SectionFrame.vue'
 import { ref } from 'vue'
-import { setUrl } from '@/common/player'
 
 const props = defineProps<{
   title: Array<any>
@@ -115,8 +114,8 @@ function tapTab(e: number) {
   padding: 0 var(--page-spacing);
   .section-card__title-tablist-item {
     padding: 0 25rpx;
-    border-right: 1px solid #ebe8eb;
-    color: #9c999c;
+    border-right: 1px solid var(--theme-border-color);
+    color: var(--theme-text-sub-color);
     &:first-child {
       padding-left: 0;
     }
@@ -127,18 +126,18 @@ function tapTab(e: number) {
   }
 
   .title-tablist-item-checked {
-    color: #1b181b;
+    color: var(--theme-text-title-color);
   }
 
   // 更多按钮
   .section-card__title-btn {
     height: var(--title-height);
     padding: 0 24rpx;
-    color: rgb(51, 51, 52);
+    color: var(--theme-text-title-color);
     font-size: 22rpx;
     font-weight: 400;
     border-radius: 24rpx;
-    border: 1px solid rgb(230, 230, 230);
+    border: 1px solid var(--theme-border-color);
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -147,7 +146,7 @@ function tapTab(e: number) {
       height: 18rpx;
       width: 18rpx;
       margin-left: 4rpx;
-      background-color: rgb(51, 51, 52);
+      background-color: var(--theme-text-title-color);
       mask-image: url('@/static/icon-arrow-right.png');
       mask-size: auto 100%;
       mask-position: center;
@@ -203,7 +202,7 @@ function tapTab(e: number) {
         width: 100%;
         height: 92rpx;
         padding: 12rpx 0;
-        border-bottom: 1px solid rgb(230, 230, 230);
+        border-bottom: 1px solid var(--theme-border-color);
         display: flex;
         flex-direction: column;
         justify-content: center;
@@ -216,7 +215,7 @@ function tapTab(e: number) {
           .songs-title-name {
             font-size: 30rpx;
             font-weight: 600;
-            color: rgb(0, 0, 0);
+            color: var(--theme-text-title-color);
           }
           .songs-title-artist {
             font-size: 24rpx;
@@ -231,7 +230,8 @@ function tapTab(e: number) {
           .songs-tags {
             font-size: 16rpx;
             padding: 4rpx 10rpx;
-            background-color: #fff9f6;
+            line-height: 30rpx;
+            background-color: rgba(201, 113, 73, 0.1);
             color: #ff7c3a;
             display: inline-block;
             margin-right: 10rpx;

@@ -5,20 +5,21 @@ import TheNavBar from '@/components/TheNavBar.vue'
 import ThePopupSong from '@/components/ThePopupSong.vue'
 import ThePlayerBottomBar from '@/components/ThePlayerBottomBar.vue'
 import { onLoad, onPageScroll, onReachBottom } from '@dcloudio/uni-app'
-import { reactive, toRaw, onMounted, ref } from 'vue'
+import { reactive, computed, onMounted, ref } from 'vue'
 import { useStore } from '@/store'
 
 const backgroundShow = ref<boolean>(false)
 const navShow = ref<boolean>(false)
 const detailPlaylistRef = ref<any>()
 const store = useStore()
-
 const data = reactive<any>({
   // 歌单id，路由传过来的
   id: '',
   // 所有歌曲的ID
   trackIds: []
 })
+
+store.setTheme('raw')
 
 onPageScroll(() => {})
 
@@ -110,19 +111,15 @@ onMounted(() => {
       })
     })
 })
+
+const pageStyle = computed(() => store.getPageMetaStyle)
 </script>
 
 <template>
-  <page-meta :page-style="store.getPageMetaStyle" />
+  <page-meta :page-style="pageStyle" />
 
   <!-- ↓ 自定义导航 -->
-  <the-nav-bar
-    :back="true"
-    :title="navShow ? data.title : '歌单'"
-    :filter="false"
-    :title-color="navShow ? 'black' : 'white'"
-    :theme-color="navShow ? '255,255,255,1' : '0,0,0,0'"
-  />
+  <the-nav-bar :back="true" :title="navShow ? data.title : '歌单'" :filter="false" :bg="navShow" />
 
   <the-popup-song />
 
@@ -186,21 +183,24 @@ onMounted(() => {
 
       <!-- 订阅按钮 -->
       <view class="detail-playlist__action">
-        <view class="detail-playlist__action-spacing">
-          <view class="detail-playlist__action-item" @tap="toSubscribe">
-            <view v-if="data.subscribed" class="icon icon-subscribedCount-active"></view>
-            <view v-else class="icon icon-subscribedCount"></view>
-            <view class="detail-playlist__action-item-text">{{ data.subscribedCount }}</view>
-          </view>
-          <view class="detail-playlist__action-item" @tap="toComment">
-            <view class="icon icon-commentCount"></view>
-            <view class="detail-playlist__action-item-text">{{ data.commentCount }}</view>
-          </view>
-          <view class="detail-playlist__action-item" style="opacity: 0.3">
-            <view class="icon icon-shareCount"></view>
-            <view class="detail-playlist__action-item-text">{{ data.shareCount }}</view>
+        <view class="detail-playlist__action-container">
+          <view class="detail-playlist__action-spacing">
+            <view class="detail-playlist__action-item" @tap="toSubscribe">
+              <view v-if="data.subscribed" class="icon icon-subscribedCount-active"></view>
+              <view v-else class="icon icon-subscribedCount"></view>
+              <view class="detail-playlist__action-item-text">{{ data.subscribedCount }}</view>
+            </view>
+            <view class="detail-playlist__action-item" @tap="toComment">
+              <view class="icon icon-commentCount"></view>
+              <view class="detail-playlist__action-item-text">{{ data.commentCount }}</view>
+            </view>
+            <view class="detail-playlist__action-item" style="opacity: 0.3">
+              <view class="icon icon-shareCount"></view>
+              <view class="detail-playlist__action-item-text">{{ data.shareCount }}</view>
+            </view>
           </view>
         </view>
+        <view class="detail-playlist__action-shadow"></view>
       </view>
 
       <!-- vip提示 -->
@@ -226,7 +226,7 @@ onMounted(() => {
   // 歌单信息高度
   --playlist-banner-height: 450rpx;
 
-  background-color: #fff;
+  background-color: var(--theme-background-color-card);
   position: relative;
   min-height: calc(100vh - var(--window-bottom));
 
@@ -363,66 +363,91 @@ onMounted(() => {
   // 评论、收藏数量按钮
   .detail-playlist__action {
     z-index: 4;
-    width: 554rpx;
+    width: 100%;
     height: var(--pl-action-height);
     margin: calc(var(--pl-action-height) / -2) 0 0 50%;
     transform: translate(-50%, 0);
-    border-radius: var(--pl-action-height);
-    background: linear-gradient(rgba(240, 240, 239, 1), rgba(255, 255, 255, 1));
     position: relative;
-    box-shadow: 16rpx calc(var(--pl-action-height) / 4) 16rpx rgba(235, 236, 236, 0.5),
-      -16rpx calc(var(--pl-action-height) / 4) 16rpx rgba(247, 248, 248, 0.5);
-    display: flex;
-    align-items: center;
 
-    .detail-playlist__action-spacing {
-      height: 38.4rpx;
-      width: 100%;
-      flex: 1;
+    .detail-playlist__action-shadow {
+      position: absolute;
+      z-index: 3;
+      width: 554rpx;
+      height: var(--pl-action-height);
+      margin: 0 0 0 50%;
+      transform: translate(-50%, 0);
+      z-index: 3;
+      background: transparent;
+      opacity: 0.11;
+      border-radius: var(--pl-action-height);
+      box-shadow: 8rpx calc(var(--pl-action-height) / 4) 16rpx var(--theme-shadow-color),
+        -16rpx calc(var(--pl-action-height) / 4) 16rpx var(--theme-shadow-color);
+    }
+
+    .detail-playlist__action-container {
+      // display: none;
+      position: absolute;
+      left: 50%;
+      width: 554rpx;
       display: flex;
+      z-index: 4;
       align-items: center;
-      justify-content: space-between;
-      color: rgb(50, 51, 50);
-      font-size: 23rpx;
-      // 中间分割线
-      .detail-playlist__action-commentCount {
-        border-left: 1px solid rgb(222, 222, 222);
-        border-right: 1px solid rgb(222, 222, 222);
-      }
-      .detail-playlist__action-item {
-        width: calc(100% / 3);
+      backdrop-filter: blur(20px);
+      transform: translate(-50%, 0);
+      height: var(--pl-action-height);
+      clip-path: inset(0 round var(--pl-action-height));
+      background: linear-gradient(var(--theme-filter-color), var(--theme-filter-color));
+
+      .detail-playlist__action-spacing {
+        height: 38.4rpx;
+        width: 100%;
+        flex: 1;
         display: flex;
         align-items: center;
-        justify-content: center;
+        justify-content: space-between;
+        color: rgb(50, 51, 50);
+        font-size: 23rpx;
+        // 中间分割线
+        .detail-playlist__action-commentCount {
+          border-left: 1px solid rgb(222, 222, 222);
+          border-right: 1px solid rgb(222, 222, 222);
+        }
+        .detail-playlist__action-item {
+          width: calc(100% / 3);
+          display: flex;
+          align-items: center;
+          justify-content: center;
 
-        .detail-playlist__action-item-text {
-          height: 38.4rpx;
-          line-height: 2;
-        }
-        .icon {
-          height: 38.4rpx;
-          width: 38.4rpx;
-          margin-right: 8rpx;
-          background-color: rgb(50, 51, 50);
-          mask-position: center;
-          mask-size: 80%;
-          mask-repeat: no-repeat;
-          mask-mode: alpha;
-        }
-        .icon-subscribedCount {
-          mask-image: url('@/static/ex9_.png');
-        }
+          .detail-playlist__action-item-text {
+            height: 38.4rpx;
+            line-height: 2;
+            color: var(--theme-text-title-color);
+          }
+          .icon {
+            height: 38.4rpx;
+            width: 38.4rpx;
+            margin-right: 8rpx;
+            background-color: var(--theme-text-title-color);
+            mask-position: center;
+            mask-size: 80%;
+            mask-repeat: no-repeat;
+            mask-mode: alpha;
+          }
+          .icon-subscribedCount {
+            mask-image: url('@/static/ex9_.png');
+          }
 
-        .icon-subscribedCount-active {
-          mask-image: url('@/static/ex9_1.png');
-        }
+          .icon-subscribedCount-active {
+            mask-image: url('@/static/ex9_1.png');
+          }
 
-        .icon-commentCount {
-          mask-image: url('@/static/ex6_.png');
-        }
+          .icon-commentCount {
+            mask-image: url('@/static/ex6_.png');
+          }
 
-        .icon-shareCount {
-          mask-image: url('@/static/ewx_.png');
+          .icon-shareCount {
+            mask-image: url('@/static/ewx_.png');
+          }
         }
       }
     }
@@ -435,8 +460,8 @@ onMounted(() => {
     box-sizing: border-box;
     height: 84.6rpx;
     width: 705rpx;
-    border: 1px solid rgb(234, 234, 234);
-    background: #fff;
+    border: 1px solid var(--theme-border-color);
+    background: var(--theme-background-color-card);
     margin: 32rpx auto 16.2rpx;
     padding: 0 20.5rpx;
     border-radius: 20.5rpx;
@@ -449,7 +474,7 @@ onMounted(() => {
       font-size: 27rpx;
       font-weight: 600;
       line-height: 1;
-      color: rgb(50, 51, 50);
+      color: var(--theme-text-sub-color);
     }
   }
 }

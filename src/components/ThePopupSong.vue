@@ -1,7 +1,7 @@
 <!--
 Author: zusheng
 Date: 2022-05-01 23:49:11
-LastEditTime: 2022-05-14 16:41:38
+LastEditTime: 2022-05-15 01:12:48
 Description: 弹出歌曲选项
 FilePath: \uni-preset-vue-vite-ts\src\components\ThePopupSong.vue
 -->
@@ -40,12 +40,13 @@ function addQueue(data: any) {
   close()
 }
 
+const rootCdn = 'http://cdn.zusheng.club/weixin/'
 const itemList = [
   {
     // 标题
     title: '插队到下一首播放',
     // 图标
-    icon: icon0,
+    icon: 'd5w_b.png',
     // 取值: 如歌手： (value)
     value: null,
     // 点击时触发的函数
@@ -56,65 +57,65 @@ const itemList = [
   {
     title: '收藏到歌单',
     disabled: true,
-    icon: icon1,
+    icon: 'ex9_b.png',
     canRedirect: false
   },
   {
     title: '下载',
     disabled: true,
-    icon: icon2,
+    icon: 'd5u_b.png',
     canRedirect: false
   },
   {
     title: '评论',
     disabled: false,
-    icon: icon3,
+    icon: 'ex5_b.png',
     value: null,
     canRedirect: true
   },
   {
     title: '分享',
     disabled: true,
-    icon: icon4,
+    icon: 'ewx_b.png',
     canRedirect: false
   },
   {
     title: '歌手：',
     disabled: false,
-    icon: icon5,
+    icon: 'e9p_b.png',
     value: 'artist',
     canRedirect: true
   },
   {
     title: '创作者：',
     disabled: false,
-    icon: icon6,
+    icon: 'en0_b.png',
     value: 'creator',
     canRedirect: true
   },
   {
     title: '云贝推歌',
     disabled: true,
-    icon: icon7,
+    icon: 'ea9_b.png',
     value: null,
     canRedirect: false
   },
   {
     title: '相关视频',
     disabled: true,
-    icon: icon9,
+    icon: 'e_6_b.png',
     canRedirect: true
   },
   {
     title: '更多乐谱',
     disabled: true,
-    icon: icon8,
+    icon: 'e_1_b.png',
     canRedirect: true
   },
   {
     title: '解除屏蔽歌曲或歌手',
     disabled: true,
-    icon: icon10,
+    icon: 'eax_b.png',
     canRedirect: false
   }
 ]
@@ -152,20 +153,23 @@ const itemList = [
         <!-- 列表项 -->
         <scroll-view class="the-popup-container__list" :scroll-y="true">
           <view
-            :class="`the-popup-container__list-item ${item.disabled ? 'list-item-disabled' : null}`"
+            :class="`the-popup-container__list-item  text-ellipsis-single ${
+              item.disabled ? 'list-item-disabled' : ''
+            }`"
             v-for="(item, idx) in itemList"
             :key="`the-popup-${idx}`"
             :hover-class="'list-item-hover'"
             :hover-start-time="100"
             @tap.stop.prevent="() => (item.func ? item.func(popupData) : false)"
           >
-            <view class="the-popup-container__list-item-left">
-              <image
+            <view class="the-popup-container__list-item-left text-ellipsis-single">
+              <view
                 class="the-popup-container__list-item-image"
-                :src="item.icon"
-                mode="aspectFit"
+                :style="{ maskImage: `url(${rootCdn + item.icon})` }"
               />
-              {{ item.title }}{{ item.value ? popupData[item.value] : '' }}
+              <view class="text-ellipsis-single">
+                {{ item.title }}{{ item.value ? popupData[item.value] : '' }}
+              </view>
             </view>
             <!-- <view v-if="item.canRedirect" class="the-popup-container__list-item-right" /> -->
           </view>
@@ -186,7 +190,7 @@ const itemList = [
     height: 160rpx;
     padding: 30rpx;
     box-sizing: border-box;
-    border-bottom: 1px solid rgb(230, 230, 230);
+    border-bottom: 1px solid var(--theme-border-color);
     display: flex;
     justify-content: space-between;
 
@@ -210,12 +214,12 @@ const itemList = [
       .the-popup-container__song-info__title {
         font-size: 28.8rpx;
         font-weight: 600;
-        color: rgba(51, 51, 52);
+        color: var(--theme-text-title-color);
       }
 
       .the-popup-container__song-info__artist {
         font-size: 24.5rpx;
-        color: rgb(153, 153, 153);
+        color: var(--theme-text-sub-color);
       }
     }
 
@@ -224,7 +228,7 @@ const itemList = [
       width: 100rpx;
       flex-shrink: 0;
       margin-left: 20.5rpx;
-      background: rgba(51, 51, 52, 0.25);
+      background: var(--theme-text-sub-color);
       mask-size: 40rpx auto;
       mask-repeat: no-repeat;
       mask-image: url('@/static/icon-arrow-bottom.png');
@@ -237,7 +241,7 @@ const itemList = [
     height: calc(100% - 160rpx);
     // 不可用按钮样式
     .list-item-disabled {
-      opacity: 0.3 !important;
+      opacity: 0.2 !important;
     }
     .the-popup-container__list-item {
       width: 100%;
@@ -251,14 +255,21 @@ const itemList = [
 
       .the-popup-container__list-item-left {
         height: 100%;
+        width: 100%;
         flex: 1;
         display: flex;
         align-items: center;
+        color: var(--theme-text-title-color);
 
         .the-popup-container__list-item-image {
+          flex-shrink: 0;
           width: 43rpx;
           height: 100%;
           margin-right: 26.5rpx;
+          mask-size: 100%;
+          mask-repeat: no-repeat;
+          mask-position: center;
+          background-color: var(--theme-text-title-color);
         }
       }
 

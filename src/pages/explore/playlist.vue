@@ -1,7 +1,7 @@
 <!--
 Author: zusheng
 Date: 2022-05-03 14:49:21
-LastEditTime: 2022-05-14 16:50:33
+LastEditTime: 2022-05-15 00:52:42
 Description: 歌单广场
 -->
 
@@ -72,6 +72,8 @@ const cate = reactive<any>({
     categories: []
   }
 })
+
+mainStore.setTheme('raw')
 
 onReady(() => {
   getrecommendsFunc()
@@ -187,21 +189,17 @@ watchEffect(() => {
     uni.hideLoading()
   }
 })
+
+const pageStyle = computed(() => mainStore.getPageMetaStyle)
 </script>
 
 <template>
-  <page-meta :page-style="mainStore.getPageMetaStyle" />
+  <page-meta :page-style="pageStyle" />
 
   <the-popup-cates />
 
   <!-- 自定义导航 -->
-  <the-nav-bar
-    :title="'歌单广场'"
-    :back="true"
-    :filter="false"
-    title-color="black"
-    theme-color="255, 255, 255, 1"
-  />
+  <the-nav-bar :title="'歌单广场'" :back="true" :filter="false" :bg="true" />
 
   <view class="explorePlaylist">
     <view class="explorePlaylist-main">
@@ -283,7 +281,7 @@ watchEffect(() => {
 
   width: 100%;
   min-height: 100vh;
-  background: linear-gradient(#fff, rgb(248, 248, 248));
+  background: var(--theme-background-color);
 
   .explorePlaylist-main {
     width: 100%;
@@ -303,7 +301,7 @@ watchEffect(() => {
       box-sizing: border-box;
       padding-right: 100rpx;
       margin-bottom: 10rpx;
-      background-color: #fff;
+      background-color: var(--theme-background-color-card);
       top: calc(var(--status-bar-height) + var(--nav-tab-height-custom) - 3px);
 
       // 显示所有分类
@@ -314,7 +312,7 @@ watchEffect(() => {
         right: 0;
         width: 98.7rpx;
         height: 64rpx;
-        background-color: #fff;
+        background-color: var(--theme-background-color-card);
 
         &::after {
           z-index: 2;
@@ -324,7 +322,7 @@ watchEffect(() => {
           right: 0;
           width: 98.7rpx;
           height: 64rpx;
-          background-color: rgb(99, 99, 99);
+          background-color: var(--theme-text-sub-color);
           mask-size: auto 40rpx;
           mask-repeat: no-repeat;
           mask-position: center;
@@ -339,7 +337,7 @@ watchEffect(() => {
         right: 0;
         width: 98.7rpx;
         height: 32rpx;
-        box-shadow: -6rpx 0 30rpx -6rpx #888;
+        box-shadow: -6rpx 0 30rpx -6rpx var(--theme-shadow-color);
       }
 
       .explorePlaylist-main__cate-item {
@@ -355,7 +353,7 @@ watchEffect(() => {
           align-items: center;
           font-size: 28.2rpx;
           font-weight: 400;
-          color: rgb(99, 99, 99);
+          color: var(--theme-text-sub-color);
 
           .explorePlaylist-main__cate-item-text {
             position: relative;
@@ -367,7 +365,7 @@ watchEffect(() => {
       // 选中状态
       .cate-item-text-checked > .explorePlaylist-main__cate-item-spacing {
         font-weight: 600;
-        color: rgb(51, 51, 51);
+        color: var(--theme-text-title-color);
         position: relative;
 
         &::before {

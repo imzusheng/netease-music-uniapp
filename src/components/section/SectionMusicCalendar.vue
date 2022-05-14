@@ -1,7 +1,7 @@
 <!--
 Author: zusheng
 Date: 2022-05-01 13:00:48
-LastEditTime: 2022-05-12 16:00:17
+LastEditTime: 2022-05-14 21:39:37
 Description: 首页分区-音乐日历
 FilePath: \uni-preset-vue-vite-ts\src\components\section\SectionMusicCalendar.vue
 -->
@@ -62,8 +62,7 @@ function tapHandler(e: any) {
 .section-card__main {
   margin-top: 18rpx;
   .section-card__main-item {
-    border-top: 1px solid #f8f5f8;
-    // border-top: 1px solid #ccc;
+    border-top: 1px solid var(--theme-border-color);
     padding: 19.2rpx 0;
     width: 100%;
     height: 92rpx;
@@ -87,12 +86,13 @@ function tapHandler(e: any) {
 
       .section-card__main-item-main__title {
         font-size: 23rpx;
-        color: #9c999c;
+        color: var(--theme-text-sub-color);
       }
 
       .section-card__main-item-main__desc {
         font-size: 28.9rpx;
         width: 100%;
+        color: var(--theme-text-title-color);
       }
     }
 

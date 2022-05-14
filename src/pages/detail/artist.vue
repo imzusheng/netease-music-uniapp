@@ -1,7 +1,7 @@
 <!--
 Author: zusheng
 Date: 2022-05-05 16:03:52
-LastEditTime: 2022-05-14 17:23:20
+LastEditTime: 2022-05-15 00:51:49
 Description: 艺人、用户详情页
 FilePath: \uni-preset-vue-vite-ts\src\pages\detail\artist.vue
 -->
@@ -65,6 +65,8 @@ const data = reactive<any>({
   },
   simi: []
 })
+
+store.setTheme('raw')
 
 // 显示导航栏
 const navShow = ref<boolean>(false)
@@ -188,19 +190,14 @@ onMounted(() => {
       })
     })
 })
+const pageStyle = computed(() => store.getPageMetaStyle)
 </script>
 
 <template>
-  <page-meta :page-style="store.getPageMetaStyle" />
+  <page-meta :page-style="pageStyle" />
 
   <!-- 自定义导航 -->
-  <the-nav-bar
-    :back="true"
-    :title="navShow ? curPageTitle : ''"
-    :filter="false"
-    :title-color="navShow ? 'black' : 'white'"
-    :theme-color="!navShow ? '0,0,0,0' : '255,255,255,1'"
-  />
+  <the-nav-bar :back="true" :title="navShow ? curPageTitle : ''" :filter="false" :bg="navShow" />
 
   <!-- ↓ 播放器 -->
   <the-player-bottom-bar />
@@ -363,6 +360,8 @@ onMounted(() => {
           <!-- ↑ 专辑、歌单列表 e -->
         </view>
       </view>
+
+      <view class="fixed-placeholder" />
     </view>
   </view>
 </template>
@@ -371,7 +370,11 @@ onMounted(() => {
 .detail-Artist {
   width: 100%;
   position: relative;
-  background: rgb(248, 248, 248);
+  background: linear-gradient(
+    to top,
+    var(--theme-background-color),
+    var(--theme-background-color-card)
+  );
 
   .detail-Artist__bg {
     width: 100%;
@@ -422,7 +425,10 @@ onMounted(() => {
     .detail-Artist__main-section-user {
       //   height: 333rpx;
       width: calc(100% - 60rpx);
-      background: linear-gradient(rgba(248, 248, 248, 0.6) 0%, #fff 30%);
+      background: linear-gradient(
+        var(--theme-filter-color) 0%,
+        var(--theme-background-color-card) 30%
+      );
       backdrop-filter: saturate(130%) blur(30px);
       border-radius: 33rpx;
       position: relative;
@@ -452,12 +458,14 @@ onMounted(() => {
         line-height: 82.7rpx;
         font-weight: 600;
         text-align: center;
+        color: var(--theme-text-title-color);
       }
 
       // 描述
       .detail-Artist__main-section-user__sub {
         font-size: 32rpx;
-        color: rgba(152, 152, 152, 1);
+        color: var(--theme-text-title-color);
+        opacity: 0.7;
         margin-bottom: 14rpx;
       }
 
@@ -466,7 +474,8 @@ onMounted(() => {
         width: 100%;
         text-align: center;
         font-size: 23rpx;
-        color: rgba(152, 152, 152, 1);
+        color: var(--theme-text-title-color);
+        opacity: 0.4;
         line-height: 1.5;
         padding: 0 30rpx;
         box-sizing: border-box;
@@ -556,7 +565,7 @@ onMounted(() => {
 
           // 标记数量的徽标
           .main-section-desc-tab__item-text-badge {
-            color: rgba(99, 99, 100, 0.6);
+            color: var(--theme-text-sub-color);
             font-size: 15rpx;
           }
 
@@ -567,15 +576,15 @@ onMounted(() => {
               position: relative;
               z-index: 2;
               font-size: 27rpx;
-              color: rgb(99, 99, 100);
+              color: var(--theme-text-sub-color);
             }
           }
 
           // 选中样式
           .item-text-checked {
             .main-section-desc-tab__item-text-inner {
+              color: var(--theme-text-title-color);
               font-weight: 600;
-              color: #000;
               position: relative;
               z-index: 2;
             }
@@ -609,7 +618,7 @@ onMounted(() => {
 
           .detail-Artist__main-section-desc__user-spacing {
             padding: 0 30rpx;
-            background: #fff;
+            background: var(--theme-background-color-card);
             box-sizing: border-box;
             border-radius: 33rpx;
 
@@ -637,12 +646,14 @@ onMounted(() => {
                   .detail-Artist__playlist-title {
                     font-size: 30.7rpx;
                     width: 100%;
+                    color: var(--theme-text-title-color);
                   }
 
                   .detail-Artist__playlist-sub {
                     font-size: 23rpx;
                     width: 100%;
-                    color: rgba(0, 0, 0, 0.6);
+                    color: var(--theme-text-title-color);
+                    opacity: 0.4;
                   }
                 }
               }

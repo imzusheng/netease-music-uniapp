@@ -5,25 +5,109 @@ import { convertCount, pickUpName } from '@/common/util'
 import { Playlist, Song } from '@/types'
 import moment from 'moment'
 
+type Theme = {
+  // 状态栏字体颜色
+  navigationBarColor: string
+  // 主题色
+  themeColor: string
+  // 页面背景色
+  backgroundColor: string
+  // 内容卡片背景色
+  backgroundColorCard: string
+  // 标题色
+  textTitleColor: string
+  // 副标题辅助色
+  textSubColor: string
+  // 边框颜色
+  borderColor: string
+  // 半透滤镜颜色
+  filterColor: string
+  // 阴影颜色
+  shadowColor: string
+}
+
 export const useStore = defineStore('main', {
   state: () => {
     return {
       // 是否防止滚动穿透
-      overflow: false
+      overflow: false,
+
+      // 主题颜色配置
+      themeConfig: {
+        // dark / light
+        theme: 'dark',
+        dark: {
+          navigationBarColor: '#ffffff',
+          themeColor: '#D1403C',
+          backgroundColor: '#0E0E0E',
+          backgroundColorCard: '#151515',
+          textTitleColor: '#ffffff',
+          textSubColor: '#626262',
+          borderColor: '#2A2A2A',
+          filterColor: 'rgba(19, 19, 20, 0.7)',
+          shadowColor: '#222222'
+        } as Theme,
+        light: {
+          navigationBarColor: '#000000',
+          themeColor: '#f9343d',
+          backgroundColor: '#F8F8F8',
+          backgroundColorCard: '#FFFFFF',
+          textTitleColor: '#333333',
+          textSubColor: '#969696',
+          borderColor: '#E7E7E7',
+          filterColor: 'rgba(252, 252, 253, 0.7)',
+          shadowColor: '#969696'
+        } as Theme
+      } as any
     }
   },
   getters: {
     getPageMetaStyle(): string {
-      const overflow: string = this.overflow ? 'overflow: hidden; ' : 'overflow: visible; '
-
       const systemInfo = uni.getSystemInfoSync()
       const statusBarHeight = systemInfo.statusBarHeight === 0 ? 10 : systemInfo.statusBarHeight
       const volume = `--status-bar-height: ${statusBarHeight}px; `
 
-      return overflow + volume
+      const overflow: string = this.overflow ? 'overflow: hidden; ' : 'overflow: visible; '
+
+      const curTheme: any = this.themeConfig[this.themeConfig.theme]
+      const themeColor: string = `background-color: ${curTheme.backgroundColor}; --theme-shadow-color: ${curTheme.shadowColor}; --theme-filter-color: ${curTheme.filterColor}; --theme-color: ${curTheme.themeColor}; --theme-background-color: ${curTheme.backgroundColor}; --theme-background-color-card: ${curTheme.backgroundColorCard}; --theme-text-title-color: ${curTheme.textTitleColor}; --theme-text-sub-color: ${curTheme.textSubColor}; --theme-border-color: ${curTheme.borderColor};`
+
+      return overflow + volume + themeColor
+    },
+    getCurTheme(): Theme {
+      return this.themeConfig[this.themeConfig.theme]
     }
   },
   actions: {
+    setTheme(theme: 'dark' | 'light' | 'raw'): void {
+      if (theme !== 'raw') this.themeConfig.theme = theme
+
+      const curTheme = this.getCurTheme
+      uni.setTabBarStyle({
+        color: curTheme.textSubColor,
+        selectedColor: curTheme.themeColor,
+        backgroundColor: curTheme.backgroundColorCard,
+        fail: () => {}
+      })
+
+      if (typeof uni.setBackgroundColor === 'function') {
+        uni.setBackgroundColor({
+          backgroundColor: curTheme.backgroundColor,
+          backgroundColorTop: curTheme.backgroundColor,
+          backgroundColorBottom: curTheme.backgroundColor,
+          fail: () => {}
+        })
+      }
+
+      if (typeof uni.setNavigationBarColor === 'function') {
+        uni.setNavigationBarColor({
+          frontColor: curTheme.navigationBarColor,
+          backgroundColor: '#fff',
+          fail: () => {}
+        })
+      }
+    },
+
     setPageMetaOverflow(status: boolean) {
       this.overflow = status
     },

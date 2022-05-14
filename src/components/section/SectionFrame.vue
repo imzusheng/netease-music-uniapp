@@ -1,7 +1,7 @@
 <!--
 Author: zusheng
 Date: 2022-04-30 21:25:28
-LastEditTime: 2022-05-11 23:31:46
+LastEditTime: 2022-05-15 00:03:04
 Description: 主页列表通用框架
 FilePath: \uni-preset-vue-vite-ts\src\components\section\SectionFrame.vue
 -->
@@ -42,7 +42,7 @@ const props = defineProps<{
   // 标题高度
   --title-height: 48rpx;
 
-  background-color: #fff;
+  background-color: var(--theme-background-color-card);
   padding: 28.8rpx 0 38.4rpx;
   margin-bottom: 19rpx;
   border-radius: 24rpx;
@@ -58,15 +58,16 @@ const props = defineProps<{
     justify-content: space-between;
     box-sizing: border-box;
     padding: 0 var(--page-spacing);
+    color: var(--theme-text-title-color);
     // 更多按钮
     .section-card__title-btn {
       height: var(--title-height);
       padding: 0 24rpx;
-      color: rgb(51, 51, 52);
+      color: var(--theme-text-title-color);
       font-size: 22rpx;
       font-weight: 400;
       border-radius: 24rpx;
-      border: 1px solid rgb(230, 230, 230);
+      border: 1px solid var(--theme-border-color);
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -75,7 +76,7 @@ const props = defineProps<{
         height: 18rpx;
         width: 18rpx;
         margin-left: 4rpx;
-        background-color: rgb(51, 51, 52);
+        background-color: var(--theme-text-title-color);
         mask-image: url('@/static/icon-arrow-right.png');
         mask-size: auto 100%;
         mask-position: center;

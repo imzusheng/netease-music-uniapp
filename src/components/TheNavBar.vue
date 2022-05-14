@@ -1,6 +1,8 @@
 <script lang="ts" setup>
 import { computed } from 'vue'
+import { useStore } from '@/store'
 
+const store = useStore()
 const props = defineProps<{
   // 是否显示返回按钮
   back: boolean
@@ -11,18 +13,18 @@ const props = defineProps<{
   // 背景是否开启滤镜
   filter: boolean
 
-  // 标题文字颜色 black/white
-  titleColor: string
-
-  // 主题色
-  themeColor?: string
+  // 背景是否显示
+  bg: boolean
 }>()
 
 const filter = computed(() => {
   return props.filter
 })
+const titleColor = computed(() => {
+  return store.getCurTheme.textTitleColor
+})
 const themeColor = computed(() => {
-  return `rgba(${props.themeColor || '255,255,255,1'})`
+  return props.bg ? store.getCurTheme.backgroundColorCard : 'transparent'
 })
 const backBtn = computed(() => {
   return typeof props.back === 'boolean' ? props.back : true
@@ -54,10 +56,7 @@ function back() {
         :style="{ 'background-color': titleColor }"
         @click="back"
       />
-      <text
-        class="nav-bar__title text-ellipsis-single"
-        :style="{ color: props?.titleColor || 'black' }"
-      >
+      <text class="nav-bar__title text-ellipsis-single" :style="{ color: titleColor || 'black' }">
         {{ props.title }}
       </text>
       <view v-if="props.back" class="nav-bar__search"></view>
@@ -75,14 +74,12 @@ function back() {
   padding-top: var(--status-bar-height);
   height: var(--nav-tab-height-custom);
   overflow: hidden;
-  // transition: all 0.2s;
 
   .nav-bar-spacing {
     display: flex;
     align-items: center;
     width: 100%;
     height: var(--nav-tab-height-custom);
-    // padding: 0 30rpx 0 0;
     box-sizing: border-box;
     position: relative;
     z-index: 1003;
@@ -120,7 +117,7 @@ function back() {
   backdrop-filter: saturate(200%) blur(20px) !important;
   /* #ifdef H5 */
   backdrop-filter: none !important;
-  background: #fff !important;
+  background: var(--theme-background-color-card) !important;
   /* #endif */
 }
 </style>

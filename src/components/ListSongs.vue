@@ -1,7 +1,7 @@
 <!--
 Author: zusheng
 Date: 2022-04-26 23:52:31
-LastEditTime: 2022-05-13 16:27:48
+LastEditTime: 2022-05-15 01:18:08
 Description: 歌曲列表
 FilePath: \uni-preset-vue-vite-ts\src\components\ListSongs.vue
 -->
@@ -111,7 +111,7 @@ function playAll() {
 <template>
   <view class="list-songs">
     <!-- 播放全部按钮 -->
-    <view class="list-songs__action" :style="{ backgroundColor: `rgba(${actionBg})` }">
+    <view class="list-songs__action">
       <!-- 左侧 按钮 -->
       <view class="list-songs__action-left" @tap.stop.prevent="playAll">
         <view class="list-songs__action-left-play" />
@@ -134,7 +134,7 @@ function playAll() {
   </view>
 </template>
 
-<style lang="less">
+<style lang="less" scoped>
 // 歌单列表
 .list-songs {
   width: 100%;
@@ -147,10 +147,6 @@ function playAll() {
   box-sizing: border-box;
   margin-bottom: 54px;
 
-  .action-bg {
-    background: #fff;
-  }
-
   // 播放全部按钮
   .list-songs__action {
     z-index: 2;
@@ -158,12 +154,14 @@ function playAll() {
     top: calc(var(--nav-tab-height-custom) + var(--status-bar-height) - 1px);
     left: 0;
     height: 102.5rpx;
-    display: flex;
-    align-items: center;
-    width: 100%;
+    width: 100vw;
+    // padding: 0 23rpx;
+    // margin-left: -23rpx;
+    box-sizing: border-box;
     display: flex;
     align-items: center;
     justify-content: space-between;
+    background: var(--theme-background-color-card);
 
     .list-songs__action-left,
     .list-songs__action-right {
@@ -190,7 +188,7 @@ function playAll() {
         .action-left-desc__text-1 {
           font-size: 32rpx;
           font-weight: 600;
-          color: rgb(50, 51, 50);
+          color: var(--theme-text-title-color);
           margin-right: 16rpx;
         }
         .action-left-desc__text-2 {

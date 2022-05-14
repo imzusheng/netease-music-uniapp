@@ -1,7 +1,7 @@
 <!--
 Author: zusheng
 Date: 2022-05-10 11:02:19
-LastEditTime: 2022-05-14 18:08:55
+LastEditTime: 2022-05-15 00:52:07
 Description: 评论详情页面
 FilePath: \uni-preset-vue-vite-ts\src\pages\detail\comment.vue
 -->
@@ -51,6 +51,8 @@ const data = reactive<any>({
   // 总数
   total: 0
 })
+
+store.setTheme('raw')
 
 onLoad((query: any) => {
   // payload id
@@ -164,8 +166,7 @@ function copy(content: string) {
     :back="true"
     :title="`${data.title}（${convertCount(data.total)}）`"
     :filter="false"
-    title-color="black"
-    theme-color="255, 255, 255, 1"
+    :bg="true"
   />
 
   <view class="detail-comment fixed-top">

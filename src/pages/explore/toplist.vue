@@ -1,7 +1,7 @@
 <!--
 Author: zusheng
 Date: 2022-05-05 10:07:43
-LastEditTime: 2022-05-14 10:41:47
+LastEditTime: 2022-05-15 00:52:53
 Description: 榜单
 -->
 
@@ -15,7 +15,6 @@ import { useStore as useMainStore } from '@/store'
 
 const mainStore = useMainStore()
 const explorePlaylist = ref<any>()
-
 const data = reactive<any>({
   list: [],
 
@@ -106,6 +105,7 @@ const toplistCate = reactive<any>({
   ]
 })
 
+mainStore.setTheme('raw')
 uni.showLoading({ title: '加载中' })
 
 onReady(() => {
@@ -175,13 +175,7 @@ function switchCate(item: any) {
   <page-meta :page-style="mainStore.getPageMetaStyle" />
 
   <!-- 自定义导航 -->
-  <the-nav-bar
-    :title="'排行榜'"
-    :back="true"
-    :filter="false"
-    title-color="black"
-    theme-color="255, 255, 255, 1"
-  />
+  <the-nav-bar :title="'排行榜'" :back="true" :filter="false" :bg="true" />
 
   <view class="explorePlaylist" ref="explorePlaylist">
     <view class="explorePlaylist-main">
@@ -246,8 +240,7 @@ function switchCate(item: any) {
   --page-spacing: 30rpx;
 
   width: 100%;
-  height: 100vh;
-  background: linear-gradient(#fff, rgb(248, 248, 248));
+  background: var(--theme-background-color);
 
   .explorePlaylist-main {
     width: 100%;
@@ -267,7 +260,7 @@ function switchCate(item: any) {
       box-sizing: border-box;
       padding-right: 100rpx;
       margin-bottom: 10rpx;
-      background-color: #fff;
+      background-color: var(--theme-background-color-card);
       top: calc(var(--status-bar-height) + var(--nav-tab-height-custom) - 3px);
 
       .explorePlaylist-main__cate-item {
@@ -283,7 +276,7 @@ function switchCate(item: any) {
           align-items: center;
           font-size: 28.2rpx;
           font-weight: 400;
-          color: rgb(99, 99, 99);
+          color: var(--theme-text-sub-color);
 
           .explorePlaylist-main__cate-item-text {
             position: relative;
@@ -295,7 +288,7 @@ function switchCate(item: any) {
       // 选中状态
       .cate-item-text-checked > .explorePlaylist-main__cate-item-spacing {
         font-weight: 600;
-        color: rgb(51, 51, 51);
+        color: var(--theme-text-title-color);
         position: relative;
         &::before {
           content: '';
@@ -329,7 +322,7 @@ function switchCate(item: any) {
       align-items: center;
       justify-content: center;
       font-size: 28rpx;
-      color: rgb(99, 99, 99);
+      color: var(--theme-text-sub-color);
     }
   }
 }

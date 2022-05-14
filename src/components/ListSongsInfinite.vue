@@ -1,7 +1,7 @@
 <!--
 Author: zusheng
 Date: 2022-04-29 12:41:58
-LastEditTime: 2022-05-13 17:13:04
+LastEditTime: 2022-05-14 22:54:06
 Description: 歌曲列表-虚拟无限滚动列表
 FilePath: \uni-preset-vue-vite-ts\src\components\ListSongsInfinite.vue
 -->
@@ -232,13 +232,13 @@ function tapHandler(e: any) {
         width: 505rpx;
         .list-songs__li-main-info-title {
           font-size: 32rpx;
-          color: #000000;
+          color: var(--theme-text-title-color);
         }
         .list-songs__li-main-info-desc {
           font-size: 24rpx;
           display: flex;
           align-items: center;
-          color: rgb(128, 128, 128);
+          color: var(--theme-text-sub-color);
           .list-songs__li-main-info-icon {
             flex-shrink: 0;
             height: 20rpx;

@@ -1,7 +1,7 @@
 <!--
 Author: zusheng
 Date: 2022-04-24 16:47:20
-LastEditTime: 2022-05-14 15:05:52
+LastEditTime: 2022-05-14 21:45:08
 Description: 首页分区-入口按钮
 FilePath: \uni-preset-vue-vite-ts\src\components\section\SectionActionBall.vue
 -->
@@ -39,7 +39,7 @@ defineProps<{
 .section-action {
   white-space: nowrap;
   padding-bottom: 36.5rpx;
-  border-bottom: 1px solid rgb(230, 230, 230);
+  border-bottom: 1px solid var(--theme-border-color);
 
   // 不可用的项目
   .item-disabled {
@@ -78,7 +78,7 @@ defineProps<{
       height: var(--action-image-item-size);
       overflow: hidden;
       border-radius: 50%;
-      background-color: #fff5f5;
+      background-color: rgba(252, 152, 156, 0.1);
 
       .section-action-item__image-text {
         position: absolute;

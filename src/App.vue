@@ -10,6 +10,7 @@ const playerStore = usePlayerStore()
 const userStore = useUserStore()
 
 onLaunch(() => {
+  mainStore.setTheme('dark')
   initPlayer()
   initUserAuth()
 })
@@ -58,9 +59,6 @@ function initPlayer() {
 page,
 html,
 body {
-  // 主题色
-  --theme-color: #f9343d;
-
   // 自定义导航栏高度
   --nav-tab-height-custom: 84.6rpx;
 
@@ -72,9 +70,9 @@ body {
   --player-height-custom: 54px;
 
   font-family: open sans, Helvetica, Arial, sans-serif;
-  background-color: #fff;
   -webkit-overflow-scrolling: touch;
   box-sizing: border-box;
+  background: transparent;
 }
 
 /* #ifdef H5 */

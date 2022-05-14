@@ -1,7 +1,7 @@
 <!--
 Author: zusheng
 Date: 2022-05-09 12:27:15
-LastEditTime: 2022-05-14 14:57:02
+LastEditTime: 2022-05-15 00:54:52
 Description: 通过手机登录
 FilePath: \uni-preset-vue-vite-ts\src\pages\login\phone.vue
 -->
@@ -95,13 +95,7 @@ function nextStep() {
   <page-meta :page-style="mainStore.getPageMetaStyle" />
 
   <!-- ↓ 自定义导航 -->
-  <the-nav-bar
-    :title="'手机号登陆'"
-    :back="true"
-    :filter="false"
-    title-color="black"
-    theme-color="0,0,0,0"
-  />
+  <the-nav-bar :title="'手机号登陆'" :back="true" :filter="false" :bg="true" />
 
   <view class="login-at-phone">
     <view class="login-at-phone__main">

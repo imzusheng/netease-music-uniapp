@@ -1,7 +1,7 @@
 <!--
 Author: zusheng
 Date: 2022-05-01 00:12:16
-LastEditTime: 2022-05-12 15:59:44
+LastEditTime: 2022-05-14 21:38:45
 Description: 首页分区-热门话题分区
 FilePath: \uni-preset-vue-vite-ts\src\components\section\SectionTopic.vue
 -->
@@ -115,7 +115,7 @@ function tapHandler(e: any) {
       .item-title {
         font-size: 29rpx;
         font-weight: 400;
-        color: rgb(0, 0, 0);
+        color: var(--theme-text-title-color);
         display: flex;
         align-items: center;
         overflow: hidden;

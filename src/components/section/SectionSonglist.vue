@@ -1,7 +1,7 @@
 <!--
 Author: zusheng
 Date: 2022-04-30 21:47:29
-LastEditTime: 2022-05-14 20:55:30
+LastEditTime: 2022-05-14 23:05:06
 Description: 首页分区-播放列表卡片(滚动列表)
 FilePath: \uni-preset-vue-vite-ts\src\components\section\SectionSonglist.vue
 -->
@@ -139,7 +139,7 @@ function tapHandler(e: any) {
         width: calc(100% - 92rpx - 54rpx);
         height: 92rpx;
         padding: 12rpx 0;
-        border-bottom: 1px solid rgb(230, 230, 230);
+        border-bottom: 1px solid var(--theme-border-color);
         display: flex;
         flex-direction: column;
         justify-content: center;
@@ -157,7 +157,7 @@ function tapHandler(e: any) {
           .songs-title-name {
             font-size: 30rpx;
             font-weight: 600;
-            color: rgb(0, 0, 0);
+            color: var(--theme-text-title-color);
           }
           .songs-title-artist {
             white-space: nowrap;
@@ -176,7 +176,8 @@ function tapHandler(e: any) {
           .songs-tags {
             font-size: 16rpx;
             padding: 4rpx 10rpx;
-            background-color: #fff9f6;
+            line-height: 30rpx;
+            background-color: rgba(201, 113, 73, 0.1);
             color: #ff7c3a;
             display: inline-block;
             margin-right: 10rpx;

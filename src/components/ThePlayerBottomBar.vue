@@ -1,7 +1,7 @@
 <!--
 Author: zusheng
 Date: 2022-04-27 10:34:18
-LastEditTime: 2022-05-13 00:14:24
+LastEditTime: 2022-05-14 21:52:48
 Description: 底部小播放器
 FilePath: \uni-preset-vue-vite-ts\src\components\ThePlayerBottomBar.vue
 -->
@@ -86,7 +86,7 @@ function playSong(status: boolean) {
   padding-bottom: constant(safe-area-inset-bottom);
   padding-bottom: env(safe-area-inset-bottom);
   bottom: var(--window-bottom);
-  background: rgba(252, 252, 252, 0.7);
+  background: var(--theme-filter-color);
   backdrop-filter: saturate(200%) blur(20px);
 
   .bottom-bar-player-spacing {
@@ -142,11 +142,11 @@ function playSong(status: boolean) {
         }
         .bottom-bar-player__main-title {
           font-size: 24rpx;
-          color: rgb(60, 60, 60);
+          color: var(--theme-text-title-color);
         }
         .bottom-bar-player__main-artist {
           font-size: 19.2rpx;
-          color: rgb(105, 105, 105);
+          color: var(--theme-text-sub-color);
         }
       }
       // 按钮栏
@@ -161,7 +161,7 @@ function playSong(status: boolean) {
         .bottom-bar-player__main-action-play,
         .bottom-bar-player__main-action-pause,
         .bottom-bar-player__main-action-queue {
-          background-color: rgb(50, 51, 51);
+          background-color: var(--theme-text-title-color);
           mask-size: 100%;
           mask-repeat: no-repeat;
           mask-position: center;

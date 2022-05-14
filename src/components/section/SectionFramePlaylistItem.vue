@@ -45,7 +45,8 @@ function toDetail(data: any) {
     transform: translate(-50%, 0);
     width: calc(var(--item-size) * 0.86);
     height: calc(var(--item-size) * 0.86);
-    background: rgb(243, 246, 245);
+    background: var(--theme-text-sub-color);
+    opacity: 0.3;
     border-radius: 19.2rpx;
     z-index: 1;
   }
@@ -67,6 +68,7 @@ function toDetail(data: any) {
     .section-card__item-title {
       font-size: 24rpx;
       margin-top: 14rpx;
+      color: var(--theme-text-title-color);
     }
   }
 }

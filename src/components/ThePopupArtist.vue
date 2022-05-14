@@ -1,7 +1,7 @@
 <!--
 Author: zusheng
 Date: 2022-05-01 23:49:11
-LastEditTime: 2022-05-14 17:05:08
+LastEditTime: 2022-05-15 00:02:04
 Description: 多个歌手时弹出选择
 FilePath: \uni-preset-vue-vite-ts\src\components\ThePopupArtist.vue
 -->
@@ -50,7 +50,6 @@ function close() {
 
 <style lang="less" scoped>
 .the-popup-container-title {
-  // border-bottom: 1px solid rgb(230, 230, 230);
   width: 100%;
   height: 72rpx;
   display: flex;
@@ -62,7 +61,7 @@ function close() {
     width: 72rpx;
     flex-shrink: 0;
     margin-left: 20.5rpx;
-    background: rgba(51, 51, 52, 0.25);
+    background: var(--theme-text-sub-color);
     mask-size: 40rpx auto;
     mask-repeat: no-repeat;
     mask-image: url('@/static/icon-arrow-bottom.png');
