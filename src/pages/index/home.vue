@@ -9,6 +9,7 @@ import SectionSonglist from '@/components/section/SectionSonglist.vue'
 import SectionTopic from '@/components/section/SectionTopic.vue'
 import SectionTablist from '@/components/section/SectionTablist.vue'
 import SectionMusicCalendar from '@/components/section/SectionMusicCalendar.vue'
+import { onPullDownRefresh } from '@dcloudio/uni-app'
 import { reactive, toRaw } from 'vue'
 import { useStore } from '@/store'
 
@@ -18,8 +19,8 @@ const data = reactive<any>({
   offset: 0,
   more: true,
   // 数据
-  actionBall: [],
   blocks: [],
+  actionBall: [],
   homepage_banner: [],
   homepage_block_hot_topic: [],
   homepage_block_playlist_rcmd: {},
@@ -30,23 +31,34 @@ const data = reactive<any>({
   homepage_voicelist_rcmd: {}
 })
 
-uni.showLoading({
-  title: '加载中',
-  mask: true
+onPullDownRefresh(() => {
+  Object.assign(data, {
+    offset: 0,
+    more: true
+  })
+  init()
 })
 
-store.getHomePage(data.offset).then(res => {
-  data.more = res.more
-  data.offset = res.offset
-  data.blocks.push(...res.data)
-  Object.assign(data, getHomePageHandler(data.blocks))
-  uni.hideLoading()
+init()
 
+function init() {
+  uni.showLoading({
+    title: '加载中',
+    mask: true
+  })
   store.getHomeBall().then(res => {
     data.actionBall = getActionBtn(res)
   })
-  getAllData()
-})
+  store.getHomePage(data.offset).then(res => {
+    data.more = res.more
+    data.offset = res.offset
+    data.blocks.push(...res.data)
+    Object.assign(data, getHomePageHandler(data.blocks))
+    uni.hideLoading()
+    uni.stopPullDownRefresh()
+    getAllData()
+  })
+}
 
 async function getAllData() {
   const res: any = await store.getHomePage(data.offset)
@@ -60,7 +72,7 @@ async function getAllData() {
     // 加载完了全部
     Object.assign(data, getHomePageHandler(data.blocks))
     uni.hideLoading()
-    data.blocks = null
+    data.blocks = []
     data.loading = false
   }
 }

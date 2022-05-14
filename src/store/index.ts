@@ -30,7 +30,7 @@ export const useStore = defineStore('main', {
 
     // 获取首页数据 (可选登录)
     async getHomePage(offset: number): Promise<any> {
-      const res = await get(API.GET_HOME_PAGE, { cursor: { offset } }, true, false)
+      const res = await get(API.GET_HOME_PAGE, { cursor: { offset }, refresh: true }, true, false)
       const cursor = res?.data?.cursor ? JSON.parse(res.data.cursor) : ''
       return {
         offset: cursor.offset ? cursor.offset : 0,

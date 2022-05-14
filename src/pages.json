@@ -3,6 +3,7 @@
     {
       "path": "pages/index/home",
       "style": {
+        "enablePullDownRefresh": true,
         "navigationBarTextStyle": "black",
         "navigationBarTitleText": "发现",
         "navigationStyle": "custom",

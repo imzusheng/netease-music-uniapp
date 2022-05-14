@@ -51,6 +51,11 @@ function initPlayer() {
       duration: player.duration
     })
   })
+
+  // 监听系统主题状态变化
+  uni.onThemeChange(res => {
+    console.log(res)
+  })
 }
 </script>
 
