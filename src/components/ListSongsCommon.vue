@@ -1,14 +1,16 @@
 <!--
 Author: zusheng
 Date: 2022-04-29 12:41:58
-LastEditTime: 2022-05-12 12:15:37
+LastEditTime: 2022-05-14 20:55:00
 Description: 歌曲列表-普通滚动列表
 FilePath: \uni-preset-vue-vite-ts\src\components\ListSongsCommon.vue
 -->
 
 <script lang="ts" setup>
-import { computed, inject } from 'vue'
+import { computed } from 'vue'
+import { useStore as usePlayerStore } from '@/store/player'
 
+const playerStore = usePlayerStore()
 const props = defineProps<{
   // 列表数据
   songs: Array<any>
@@ -20,9 +22,10 @@ function tapHandler(e: any, data: any) {
   if (datasetKeys.includes('onMore')) {
   } else {
     // 添加歌曲信息到播放器
+    playerStore.setPlayerInfo(data.payload)
     // 打开播放器
     uni.navigateTo({
-      url: `../../pages/detail/DetailPlayer?type=poster&payload=${data.payload}`
+      url: `../../pages/player/index?type=poster&payload=${data.payload}`
     })
   }
 }

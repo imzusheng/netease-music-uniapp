@@ -33,6 +33,16 @@
       }
     },
     {
+      "path": "pages/index/setting",
+      "style": {
+        "navigationBarTextStyle": "black",
+        "navigationBarTitleText": "设置",
+        "navigationStyle": "custom",
+        "backgroundColorTop": "#fff",
+        "backgroundColorBottom": "#F8F8F8"
+      }
+    },
+    {
       "path": "pages/player/index",
       "style": {
         "navigationBarTextStyle": "white",
@@ -152,6 +162,12 @@
         "iconPath": "/static/c3x_3b.png",
         "selectedIconPath": "/static/c3x_checked.png",
         "text": "播客"
+      },
+      {
+        "pagePath": "pages/index/setting",
+        "iconPath": "/static/set_3b.png",
+        "selectedIconPath": "/static/set_checked.png",
+        "text": "设置"
       }
     ]
   }

@@ -1,14 +1,16 @@
 <!--
 Author: zusheng
 Date: 2022-04-30 21:47:29
-LastEditTime: 2022-05-12 16:08:15
+LastEditTime: 2022-05-14 20:55:30
 Description: 首页分区-播放列表卡片(滚动列表)
 FilePath: \uni-preset-vue-vite-ts\src\components\section\SectionSonglist.vue
 -->
 
 <script lang="ts" setup>
 import SectionFrame from '@/components/section/SectionFrame.vue'
+import { useStore as usePlayerStore } from '@/store/player'
 
+const playerStore = usePlayerStore()
 const props = defineProps<{
   // 分区标题
   title: string
@@ -21,9 +23,11 @@ const props = defineProps<{
 }>()
 
 function tapHandler(e: any) {
+  // 添加歌曲信息到播放器
+  playerStore.setPlayerInfo(e.payload)
   // 打开播放器
   uni.navigateTo({
-    url: `../../pages/detail/DetailPlayer?type=poster&payload=${e.payload}`
+    url: `../../pages/player/index?type=poster&payload=${e.payload}`
   })
 }
 </script>
