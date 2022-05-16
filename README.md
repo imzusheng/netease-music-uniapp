@@ -1,37 +1,55 @@
 # netease-music-uniapp
 
 #### 介绍
-使用 uni-app 实现网易云音乐小程序、h5等多端应用
 
-#### 软件架构
-软件架构
+使用 uni-app 实现网易云音乐小程序、h5 等多端应用，技术栈 Vue3 + vite + pinia + ts
 
+#### 效果图（支持夜间模式）
+
+![效果图](http://cdn.zusheng.club/screenshots/netease-music-uniapp/01.jpg)
+
+![效果图](http://cdn.zusheng.club/screenshots/netease-music-uniapp/02.jpg)
+
+![效果图](http://cdn.zusheng.club/screenshots/netease-music-uniapp/03.jpg)
+
+![效果图](http://cdn.zusheng.club/screenshots/netease-music-uniapp/04.jpg)
+
+![效果图](http://cdn.zusheng.club/screenshots/netease-music-uniapp/05.jpg)
+
+![效果图](http://cdn.zusheng.club/screenshots/netease-music-uniapp/06.jpg)
+
+![效果图](http://cdn.zusheng.club/screenshots/netease-music-uniapp/07.jpg)
+
+![效果图](http://cdn.zusheng.club/screenshots/netease-music-uniapp/08.jpg)
+
+- [x] 手机号登录
+- [x] 账号密码
+- [x] 验证码登录
+- [x] 注册账号
+- [ ] 邮箱登录
+- [x] 歌单广场
+- [x] 所有榜单
+- [x] 全功能播放器
+- [x] 代播列表
+- [x] 插播列表（优先于播放队列）
+- [x] 歌单详情页
+- [x] 用户详情页
+- [x] 艺人详情页
+- [ ] 动态详情页
+- [ ] 日推
+- [ ] FM
+- [ ] 听歌打卡
+- [x] 评论详情页，评论点赞，长按复制
+- [x] 收藏/取消收藏歌单
+- [ ] 保存图片
+- [x] 虚拟滚动列表（真有 10000 首歌的歌单）
 
 #### 安装教程
 
-1.  xxxx
-2.  xxxx
-3.  xxxx
+1. git clone https://gitee.com/imzusheng/netease-music-uniapp.git
 
-#### 使用说明
+2. cd netease-music-uniapp
 
-1.  xxxx
-2.  xxxx
-3.  xxxx
+3. npm i 或 yarn
 
-#### 参与贡献
-
-1.  Fork 本仓库
-2.  新建 Feat_xxx 分支
-3.  提交代码
-4.  新建 Pull Request
-
-
-#### 特技
-
-1.  使用 Readme\_XXX.md 来支持不同的语言，例如 Readme\_en.md, Readme\_zh.md
-2.  Gitee 官方博客 [blog.gitee.com](https://blog.gitee.com)
-3.  你可以 [https://gitee.com/explore](https://gitee.com/explore) 这个地址来了解 Gitee 上的优秀开源项目
-4.  [GVP](https://gitee.com/gvp) 全称是 Gitee 最有价值开源项目，是综合评定出的优秀开源项目
-5.  Gitee 官方提供的使用手册 [https://gitee.com/help](https://gitee.com/help)
-6.  Gitee 封面人物是一档用来展示 Gitee 会员风采的栏目 [https://gitee.com/gitee-stars/](https://gitee.com/gitee-stars/)
+!注意：运行 `微信小程序` 需要修改 `manifest.json` 文件下 `mp-weixin.appid`，运行 `h5` 要注意 `vite.config.ts` 下的 `base` 路径，`src/common/apiService.ts` 下的 baseURL 是自建服务器，短期内不会失效，觉得慢可以换成自己的
