@@ -54,5 +54,10 @@ Vue3 + vite + pinia + ts 实现网易云音乐小程序、h5 等多端应用，�
 
 !注意：运行 `微信小程序` 需要修改 `manifest.json` 文件下 `mp-weixin.appid`，运行 `h5` 要注意 `vite.config.ts` 下的 `base` 路径，`src/common/apiService.ts` 下的 baseURL 是自建服务器，短期内不会失效，觉得慢可以换成自己的
 
+#### h5 预览
+
+建议下载后运行微信小程序版本
+[https://demo.zusheng.club/uni_music](https://demo.zusheng.club/uni_music)
+
 欢迎交流
 本项目仅限学习交流使用, 不得用于商业用途
