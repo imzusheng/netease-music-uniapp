@@ -167,12 +167,12 @@
         "selectedIconPath": "/static/c3u_checked.png",
         "text": "我的"
       },
-      {
-        "pagePath": "pages/index/broadcast",
-        "iconPath": "/static/c3x_3b.png",
-        "selectedIconPath": "/static/c3x_checked.png",
-        "text": "播客"
-      },
+      // {
+      //   "pagePath": "pages/index/broadcast",
+      //   "iconPath": "/static/c3x_3b.png",
+      //   "selectedIconPath": "/static/c3x_checked.png",
+      //   "text": "播客"
+      // },
       {
         "pagePath": "pages/index/setting",
         "iconPath": "/static/set_3b.png",

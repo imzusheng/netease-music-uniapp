@@ -1,3 +1,10 @@
+<!--
+Author: zusheng
+Date: 2022-05-11 20:12:08
+LastEditTime: 2022-05-16 21:21:57
+Description: 
+FilePath: \uni-preset-vue-vite-ts\src\pages\index\home.vue
+-->
 <script lang="ts" setup>
 import { getActionBtn, getHomePageHandler } from '@/common/requestHandler'
 import TheNavBar from '@/components/TheNavBar.vue'
@@ -9,7 +16,6 @@ import SectionSonglist from '@/components/section/SectionSonglist.vue'
 import SectionTopic from '@/components/section/SectionTopic.vue'
 import SectionTablist from '@/components/section/SectionTablist.vue'
 import SectionMusicCalendar from '@/components/section/SectionMusicCalendar.vue'
-import homePageConfigRaw from '@/common/homePageConfig'
 import { onPullDownRefresh, onReachBottom, onShow } from '@dcloudio/uni-app'
 import { reactive, computed, toRaw } from 'vue'
 import { useStore } from '@/store'
@@ -29,6 +35,8 @@ const data = reactive<any>({
   actionBall: []
 })
 
+Object.assign(data, store.getHomePageConfig)
+
 // 下拉刷新
 onPullDownRefresh(() => {
   uni.vibrateShort({
@@ -38,6 +46,7 @@ onPullDownRefresh(() => {
     offset: 0,
     more: true
   })
+  Object.assign(data, store.getHomePageConfig)
   init()
 })
 
@@ -63,35 +72,22 @@ function init() {
     mask: true
   })
 
-  // 检查storage中有没有
-  const homePageConfigStorage = uni.getStorageSync('homePageConfig')
-
-  // 将要使用的主页数据
-  let homePageConfig
-  // 如果storage中有，则赋值。若storage中没有，直接使用原始数据
-  if (!!homePageConfigStorage) {
-    homePageConfig = homePageConfigStorage
-  } else {
-    homePageConfig = homePageConfigRaw
-    uni.setStorageSync('homePageConfig', homePageConfigRaw)
-  }
-
-  Object.assign(data, homePageConfig)
-
-  store.getHomePage(data.offset).then(res => {
+  store.getHomePage(data.offset).then((res: any) => {
     store.getHomeBall().then(res => (data.actionBall = getActionBtn(res)))
     data.more = res.more
     data.offset = res.offset
 
     const homePageRes = getHomePageHandler(res.data)
-    Object.keys(homePageRes).forEach(blocksKey => {
-      Object.assign(data[blocksKey], homePageRes[blocksKey])
+    const homePageResKeys = Object.keys(homePageRes)
+
+    Object.keys(data).forEach((key: string) => {
+      if (homePageResKeys.includes(data[key]?.code) && !data[key]?.disable) {
+        data[key] = homePageRes[key]
+      }
     })
 
     uni.hideLoading()
     uni.stopPullDownRefresh()
-    // debug
-    // getAllData()
   })
 }
 
@@ -107,11 +103,11 @@ async function getAllData() {
   } else {
     // 加载完了全部
     const homePageRes = getHomePageHandler(toRaw(data.blocks))
-    Object.keys(homePageRes).forEach(blocksKey => {
-      try {
-        Object.assign(data[blocksKey], homePageRes[blocksKey])
-      } catch (e: any) {
-        console.error(e, blocksKey)
+    const homePageResKeys = Object.keys(homePageRes)
+
+    Object.keys(data).forEach((key: string) => {
+      if (homePageResKeys.includes(data[key]?.code) && !data[key]?.disable) {
+        data[key] = homePageRes[key]
       }
     })
 

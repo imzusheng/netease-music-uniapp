@@ -1,9 +1,17 @@
+/*
+ * @Author: zusheng
+ * @Date: 2022-05-11 15:17:10
+ * @LastEditTime: 2022-05-16 21:32:58
+ * @Description:
+ * @FilePath: \uni-preset-vue-vite-ts\src\store\index.ts
+ */
 import { defineStore } from 'pinia'
 import API from '@/common/api'
 import { get } from '@/common/apiService'
 import { convertCount, pickUpName } from '@/common/util'
 import { Playlist, Song } from '@/types'
 import moment from 'moment'
+import homePageConfigRaw from '@/common/homePageConfig'
 
 type Theme = {
   // 状态栏字体颜色
@@ -115,6 +123,25 @@ export const useStore = defineStore('main', {
     },
     getCurTheme(): Theme {
       return this.themeConfig[this.themeConfig.theme]
+    },
+    /**
+     * 获取主页配置
+     */
+    getHomePageConfig() {
+      // 检查storage中有没有
+      const homePageConfigStorage = uni.getStorageSync('homePageConfig')
+
+      // 将要使用的主页数据
+      let homePageConfig
+      // 如果storage中有，则赋值。若storage中没有，直接使用原始数据
+      if (!!homePageConfigStorage) {
+        homePageConfig = homePageConfigStorage
+      } else {
+        homePageConfig = homePageConfigRaw
+        uni.setStorageSync('homePageConfig', homePageConfigRaw)
+      }
+
+      return homePageConfig
     }
   },
   actions: {
