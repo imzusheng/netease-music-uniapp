@@ -9,8 +9,9 @@ import SectionSonglist from '@/components/section/SectionSonglist.vue'
 import SectionTopic from '@/components/section/SectionTopic.vue'
 import SectionTablist from '@/components/section/SectionTablist.vue'
 import SectionMusicCalendar from '@/components/section/SectionMusicCalendar.vue'
-import { onPullDownRefresh } from '@dcloudio/uni-app'
-import { reactive, computed } from 'vue'
+import homePageConfigRaw from '@/common/homePageConfig'
+import { onPullDownRefresh, onReachBottom, onShow } from '@dcloudio/uni-app'
+import { reactive, computed, toRaw } from 'vue'
 import { useStore } from '@/store'
 
 const store = useStore()
@@ -18,22 +19,21 @@ const data = reactive<any>({
   loading: true,
   offset: 0,
   more: true,
-  // 数据
+  // 是否正在请求所有数据，防止onReachBottom多次触发
+  getAllData: false,
+  // 获取的原始blocks数据
   blocks: [],
-  actionBall: [],
-  homepage_banner: [],
-  homepage_block_hot_topic: [],
-  homepage_block_playlist_rcmd: {},
-  homepage_block_new_album_new_song: {},
-  homepage_block_official_playlist: {},
-  homepage_block_style_rcmd: {},
-  homepage_music_calendar: {},
-  homepage_voicelist_rcmd: {}
+  /**
+   * 主页action按钮
+   */
+  actionBall: []
 })
 
-store.setTheme('raw')
-
+// 下拉刷新
 onPullDownRefresh(() => {
+  uni.vibrateShort({
+    fail: () => {}
+  })
   Object.assign(data, {
     offset: 0,
     more: true
@@ -41,28 +41,62 @@ onPullDownRefresh(() => {
   init()
 })
 
-init()
+// 触底加载
+onReachBottom(() => {
+  uni.vibrateShort({
+    fail: () => {}
+  })
+  if (!data.getAllData) {
+    getAllData()
+  }
+})
 
+onShow(() => {
+  store.setTheme('raw')
+})
+
+init()
+// 加载首屏数据
 function init() {
   uni.showLoading({
     title: '加载中',
     mask: true
   })
-  store.getHomeBall().then(res => {
-    data.actionBall = getActionBtn(res)
-  })
+
+  // 检查storage中有没有
+  const homePageConfigStorage = uni.getStorageSync('homePageConfig')
+
+  // 将要使用的主页数据
+  let homePageConfig
+  // 如果storage中有，则赋值。若storage中没有，直接使用原始数据
+  if (!!homePageConfigStorage) {
+    homePageConfig = homePageConfigStorage
+  } else {
+    homePageConfig = homePageConfigRaw
+    uni.setStorageSync('homePageConfig', homePageConfigRaw)
+  }
+
+  Object.assign(data, homePageConfig)
+
   store.getHomePage(data.offset).then(res => {
+    store.getHomeBall().then(res => (data.actionBall = getActionBtn(res)))
     data.more = res.more
     data.offset = res.offset
-    data.blocks.push(...res.data)
-    Object.assign(data, getHomePageHandler(data.blocks))
+
+    const homePageRes = getHomePageHandler(res.data)
+    Object.keys(homePageRes).forEach(blocksKey => {
+      Object.assign(data[blocksKey], homePageRes[blocksKey])
+    })
+
     uni.hideLoading()
     uni.stopPullDownRefresh()
-    getAllData()
+    // debug
+    // getAllData()
   })
 }
 
 async function getAllData() {
+  data.getAllData = true
   const res: any = await store.getHomePage(data.offset)
   data.more = res.more
   data.offset = res.offset
@@ -72,14 +106,29 @@ async function getAllData() {
     getAllData()
   } else {
     // 加载完了全部
-    Object.assign(data, getHomePageHandler(data.blocks))
+    const homePageRes = getHomePageHandler(toRaw(data.blocks))
+    Object.keys(homePageRes).forEach(blocksKey => {
+      try {
+        Object.assign(data[blocksKey], homePageRes[blocksKey])
+      } catch (e: any) {
+        console.error(e, blocksKey)
+      }
+    })
+
     uni.hideLoading()
     data.blocks = []
     data.loading = false
   }
 }
 
-const pageStyle = computed(() => store.getPageMetaStyle)
+// 推荐歌单查看更多-前往歌单广告
+function rcmdToMore() {
+  uni.navigateTo({ url: '../explore/playlist' })
+}
+
+const pageStyle = computed(() => {
+  return store.getPageMetaStyle
+})
 </script>
 
 <template>
@@ -95,88 +144,211 @@ const pageStyle = computed(() => store.getPageMetaStyle)
     <!-- ↓ 首页banner和入口栏 -->
     <view class="home-banner">
       <!-- banner -->
-      <section-banner :list="data.homepage_banner" />
+      <section-banner :list="data.homepage_banner.data" />
 
       <!-- 入口按钮 -->
       <section-action-ball :data="data.actionBall" />
     </view>
 
-    <!-- ↓ 分区 - 推荐歌单 -->
-    <section-playlist
-      v-if="data.homepage_block_playlist_rcmd?.list"
-      title="推荐歌单"
-      :data="{
-        scrollList: data.homepage_block_playlist_rcmd.scrollList,
-        list: data.homepage_block_playlist_rcmd.list
-      }"
-    />
+    <!-- 用于排序 -->
+    <view class="home-order-wrap">
+      <!-- ↓ 分区 - 推荐歌单 -->
+      <section-playlist
+        :style="{ order: data.homepage_block_playlist_rcmd.order }"
+        v-if="data.homepage_block_playlist_rcmd?.list"
+        title="推荐歌单"
+        :data="{
+          scrollList: data.homepage_block_playlist_rcmd.scrollList,
+          list: data.homepage_block_playlist_rcmd.list
+        }"
+        @more="rcmdToMore"
+      />
 
-    <!-- ↓ 分区 个性推荐单曲 -->
-    <section-songlist
-      v-if="data.homepage_block_style_rcmd?.list"
-      :title="data.homepage_block_style_rcmd.title"
-      :data="{
-        list: data.homepage_block_style_rcmd.list
-      }"
-    />
+      <!-- ↓ 分区 个性推荐单曲 -->
+      <section-songlist
+        :style="{ order: data.homepage_block_style_rcmd.order }"
+        v-if="data.homepage_block_style_rcmd?.list"
+        :title="data.homepage_block_style_rcmd.title"
+        :data="{
+          list: data.homepage_block_style_rcmd.list
+        }"
+      />
 
-    <!-- ↓ 分区 热门话题 -->
-    <section-topic
-      v-if="data.homepage_block_hot_topic?.length > 0"
-      title="热门话题"
-      :data="{
-        list: data.homepage_block_hot_topic
-      }"
-    />
+      <!-- ↓ 分区 DJ专区 -->
+      <section-songlist
+        :style="{ order: data.homepage_block_zone_dj.order }"
+        v-if="data.homepage_block_zone_dj?.list"
+        :title="data.homepage_block_zone_dj.title"
+        :data="{
+          list: data.homepage_block_zone_dj.list
+        }"
+      />
 
-    <!-- ↓ 分区 - 新歌、新碟、新专辑 -->
-    <section-tablist
-      v-if="data.homepage_block_new_album_new_song?.newSongs"
-      :title="['新歌', '新碟', '新专辑']"
-      :data="[
-        data.homepage_block_new_album_new_song.newSongs,
-        data.homepage_block_new_album_new_song.newAlbum,
-        data.homepage_block_new_album_new_song.newDigital
-      ]"
-    />
+      <!-- ↓ 分区 经典专区 -->
+      <section-songlist
+        :style="{ order: data.homepage_block_zone_classic.order }"
+        v-if="data.homepage_block_zone_classic?.title"
+        :title="data.homepage_block_zone_classic.title"
+        :data="{
+          list: data.homepage_block_zone_classic.list
+        }"
+      />
 
-    <!-- ↓ 分区 - 音乐日历 -->
-    <section-music-calendar
-      v-if="data.homepage_music_calendar?.list"
-      :title="data.homepage_music_calendar.title"
-      :data="{
-        list: data.homepage_music_calendar.list
-      }"
-    />
+      <!-- ↓ 分区 热门话题 -->
+      <section-topic
+        :style="{ order: data.homepage_block_hot_topic.order }"
+        v-if="data.homepage_block_hot_topic?.title"
+        :title="data.homepage_block_hot_topic.title"
+        :data="{
+          list: data.homepage_block_hot_topic.list
+        }"
+      />
 
-    <!-- ↓ 分区 - 网易云音乐的雷达歌单 -->
-    <section-playlist
-      v-if="data.homepage_block_mgc_playlist?.list"
-      title="网易云音乐的雷达歌单"
-      :data="{
-        scrollList: [],
-        list: data.homepage_block_mgc_playlist.list
-      }"
-    />
+      <!-- ↓ 分区 - 音乐视频 -->
+      <section-playlist
+        :style="{ order: data.homepage_block_video_playlist.order }"
+        v-if="data.homepage_block_video_playlist?.title"
+        :title="data.homepage_block_video_playlist.title"
+        :data="{
+          scrollList: [],
+          list: data.homepage_block_video_playlist.list
+        }"
+      />
 
-    <!-- ↓ 分区 - 专属场景歌单 -->
-    <section-playlist
-      v-if="data.homepage_block_official_playlist?.list"
-      title="专属场景歌单"
-      :data="{
-        scrollList: [],
-        list: data.homepage_block_official_playlist.list
-      }"
-    />
+      <!-- ↓ 分区 - 网易云音乐的雷达歌单 -->
+      <section-playlist
+        :style="{ order: data.homepage_block_mgc_playlist.order }"
+        v-if="data.homepage_block_mgc_playlist?.title"
+        :title="data.homepage_block_mgc_playlist.title"
+        :data="{
+          scrollList: [],
+          list: data.homepage_block_mgc_playlist.list
+        }"
+      />
 
-    <!-- ↓ 分区 - 热门博客、有声书 -->
-    <section-tablist
-      v-if="data.homepage_voicelist_rcmd?.bodcastList"
-      :title="['热门播客', '有声书']"
-      :data="[data.homepage_voicelist_rcmd.bodcastList, data.homepage_voicelist_rcmd.voiceList]"
-    />
+      <!-- ↓ 分区 - 专属场景歌单 -->
+      <section-playlist
+        :style="{ order: data.homepage_block_official_playlist.order }"
+        v-if="data.homepage_block_official_playlist?.title"
+        :title="data.homepage_block_official_playlist.title"
+        :data="{
+          scrollList: [],
+          list: data.homepage_block_official_playlist.list
+        }"
+      />
 
-    <view v-if="data.loading" class="loading">加载中...</view>
+      <!-- ↓ 分区 - 新歌、新碟、新专辑 -->
+      <section-tablist
+        :style="{ order: data.homepage_block_new_album_new_song.order }"
+        v-if="data.homepage_block_new_album_new_song?.title"
+        :title="data.homepage_block_new_album_new_song.title"
+        :data="data.homepage_block_new_album_new_song.data"
+      />
+
+      <!-- ↓ 分区 - 音乐日历 -->
+      <section-music-calendar
+        :style="{ order: data.homepage_music_calendar.order }"
+        v-if="data.homepage_music_calendar?.title"
+        :title="data.homepage_music_calendar.title"
+        :data="{
+          list: data.homepage_music_calendar.list
+        }"
+      />
+
+      <!-- ↓ 分区 爵士专区 -->
+      <section-songlist
+        :style="{ order: data.homepage_block_zone_jazz.order }"
+        v-if="data.homepage_block_zone_jazz?.title"
+        :title="data.homepage_block_zone_jazz.title"
+        :data="{
+          list: data.homepage_block_zone_jazz.list
+        }"
+      />
+
+      <!-- ↓ 分区 古典专区 -->
+      <section-songlist
+        :style="{ order: data.homepage_block_zone_classical.order }"
+        v-if="data.homepage_block_zone_classical?.title"
+        :title="data.homepage_block_zone_classical.title"
+        :data="{
+          list: data.homepage_block_zone_classical.list
+        }"
+      />
+
+      <!-- ↓ 分区 说唱专区 -->
+      <section-songlist
+        :style="{ order: data.homepage_block_zone_hiphop.order }"
+        v-if="data.homepage_block_zone_hiphop?.title"
+        :title="data.homepage_block_zone_hiphop.title"
+        :data="{
+          list: data.homepage_block_zone_hiphop.list
+        }"
+      />
+
+      <!-- ↓ 分区 摇滚专区 -->
+      <section-songlist
+        :style="{ order: data.homepage_block_zone_rock.order }"
+        v-if="data.homepage_block_zone_rock?.title"
+        :title="data.homepage_block_zone_rock.title"
+        :data="{
+          list: data.homepage_block_zone_rock.list
+        }"
+      />
+
+      <!-- ↓ 分区 - 热门博客、有声书 -->
+      <section-tablist
+        :style="{ order: data.homepage_voicelist_rcmd.order }"
+        v-if="data.homepage_voicelist_rcmd?.title"
+        :title="data.homepage_voicelist_rcmd.title"
+        :data="data.homepage_voicelist_rcmd.data"
+      />
+
+      <!-- ↓ 分区 - 电音专区 -->
+      <section-playlist
+        :style="{ order: data.homepage_block_zone_electronic.order }"
+        v-if="data.homepage_block_zone_electronic?.title"
+        :title="data.homepage_block_zone_electronic.title"
+        :data="{
+          scrollList: [],
+          list: data.homepage_block_zone_electronic.list
+        }"
+      />
+
+      <!-- ↓ 分区 - 相声曲艺 -->
+      <section-playlist
+        :style="{ order: data.homepage_block_comic_opera.order }"
+        v-if="data.homepage_block_comic_opera?.title"
+        :title="data.homepage_block_comic_opera.title"
+        :data="{
+          scrollList: [],
+          list: data.homepage_block_comic_opera.list
+        }"
+      />
+
+      <!-- ↓ 分区 - 助眠解压 -->
+      <section-playlist
+        :style="{ order: data.homepage_block_sleeping.order }"
+        v-if="data.homepage_block_sleeping?.title"
+        :title="data.homepage_block_sleeping.title"
+        :data="{
+          scrollList: [],
+          list: data.homepage_block_sleeping.list
+        }"
+      />
+
+      <!-- ↓ 分区 - 有声剧场 -->
+      <section-playlist
+        :style="{ order: data.homepage_block_theater.order }"
+        v-if="data.homepage_block_theater?.title"
+        :title="data.homepage_block_theater.title"
+        :data="{
+          scrollList: [],
+          list: data.homepage_block_theater.list
+        }"
+      />
+    </view>
+
+    <view v-if="data.loading" class="loading-placeholder">加载中...</view>
   </view>
 </template>
 
@@ -185,16 +357,9 @@ const pageStyle = computed(() => store.getPageMetaStyle)
   // 两边距
   --page-spacing: 32rpx;
   width: 100%;
-  min-height: 100vh;
+  min-height: calc(100vh - var(--window-bottom));
   background: var(--theme-background-color);
-  transition: opacity 0.5s;
-
-  .loading {
-    width: 100%;
-    text-align: center;
-    margin-top: 30rpx;
-    color: rgba(200, 200, 200);
-  }
+  overflow: hidden;
 
   .home-banner {
     background: linear-gradient(
@@ -202,6 +367,23 @@ const pageStyle = computed(() => store.getPageMetaStyle)
       var(--theme-background-color-card)
     );
     overflow: hidden;
+  }
+
+  // 排序容器
+  .home-order-wrap {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .loading-placeholder {
+    width: 100%;
+    text-align: center;
+    padding-top: 30rpx;
+    box-sizing: border-box;
+    background-color: transparent;
+    height: calc(constant(safe-area-inset-bottom) + var(--player-height-custom));
+    height: calc(env(safe-area-inset-bottom) + var(--player-height-custom));
+    color: var(--theme-text-sub-color);
   }
 }
 </style>

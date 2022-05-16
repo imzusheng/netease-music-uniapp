@@ -1,9 +1,9 @@
 <!--
 Author: zusheng
 Date: 2022-04-26 08:36:58
-LastEditTime: 2022-05-05 11:35:53
+LastEditTime: 2022-05-15 18:59:57
 Description: 封面卡片
-FilePath: \uni-music-app\src\components\CardPoster.vue
+FilePath: \uni-preset-vue-vite-ts\src\components\CardPoster.vue
 -->
 
 <script lang="ts" setup>
@@ -22,7 +22,7 @@ const props = defineProps<{
       <text>{{ props.playCount }}</text>
     </view>
     <!-- 2.歌单封面 -->
-    <image class="section-card__item-image" :src="props.picUrl" mode="aspectFit" />
+    <image class="section-card__item-image" :src="props.picUrl" mode="aspectFill" />
   </view>
 </template>
 

@@ -1,7 +1,7 @@
 <!--
 Author: zusheng
 Date: 2022-05-05 16:03:52
-LastEditTime: 2022-05-15 00:51:49
+LastEditTime: 2022-05-15 11:35:52
 Description: 艺人、用户详情页
 FilePath: \uni-preset-vue-vite-ts\src\pages\detail\artist.vue
 -->
@@ -184,13 +184,15 @@ onMounted(() => {
       const show = res.intersectionRatio < 0.8
       navShow.value = show
 
+      const navShowColor = store.themeConfig.theme === 'dark' ? '#ffffff' : '#000000'
       uni.setNavigationBarColor({
-        frontColor: show ? '#000000' : '#ffffff',
+        frontColor: navShow.value ? navShowColor : '#ffffff',
         backgroundColor: '#fff'
       })
     })
 })
 const pageStyle = computed(() => store.getPageMetaStyle)
+const actionBgColor = computed(() => store.getCurTheme.backgroundColor)
 </script>
 
 <template>
@@ -309,7 +311,7 @@ const pageStyle = computed(() => store.getPageMetaStyle)
             v-if="data.artist.trackIds?.length > 0 && data.artist.curCateIdx === 0"
             :trackIds="data.artist.trackIds"
             :infinite="false"
-            action-bg="248, 248, 248, 1"
+            :action-bg="actionBgColor"
           />
 
           <!-- ↓ 专辑、歌单列表 s -->
@@ -370,11 +372,7 @@ const pageStyle = computed(() => store.getPageMetaStyle)
 .detail-Artist {
   width: 100%;
   position: relative;
-  background: linear-gradient(
-    to top,
-    var(--theme-background-color),
-    var(--theme-background-color-card)
-  );
+  background: var(--theme-background-color);
 
   .detail-Artist__bg {
     width: 100%;
@@ -493,7 +491,7 @@ const pageStyle = computed(() => store.getPageMetaStyle)
           height: 100%;
           width: 180rpx;
           margin: 0 9.6rpx;
-          background-color: rgba(248, 248, 248, 1);
+          background-color: var(--theme-background-color-clear);
           border-radius: 17rpx;
           display: inline-block;
           padding: 18rpx;
@@ -516,6 +514,7 @@ const pageStyle = computed(() => store.getPageMetaStyle)
             margin-bottom: 18rpx;
             width: 100%;
             text-align: center;
+            color: var(--theme-text-title-color);
           }
 
           //  描述

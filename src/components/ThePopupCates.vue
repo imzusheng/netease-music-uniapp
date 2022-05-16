@@ -1,7 +1,7 @@
 <!--
 Author: zusheng
 Date: 2022-05-01 23:49:11
-LastEditTime: 2022-05-14 17:01:31
+LastEditTime: 2022-05-15 11:16:28
 Description: 歌单广场所有歌单分类选择时弹出
 FilePath: \uni-preset-vue-vite-ts\src\components\ThePopupCates.vue
 -->
@@ -67,7 +67,7 @@ function close() {
     width: 72rpx;
     flex-shrink: 0;
     margin-left: 20.5rpx;
-    background: rgba(51, 51, 52, 0.25);
+    background: var(--theme-text-sub-color);
     mask-size: 40rpx auto;
     mask-repeat: no-repeat;
     mask-image: url('@/static/icon-arrow-bottom.png');
@@ -90,13 +90,13 @@ function close() {
     height: 73rpx;
     flex-shrink: 1;
     border-radius: 37rpx;
-    color: rgb(50, 50, 50);
-    background-color: rgb(248, 248, 248);
+    color: var(--theme-text-title-color);
+    background-color: var(--theme-background-color-clear);
     display: flex;
     align-items: center;
     justify-content: center;
     margin: 16rpx 15rpx;
-    font-size: 23rpx;
+    font-size: 20.7rpx;
 
     .cate-item-fire {
       height: 73rpx;

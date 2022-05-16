@@ -1,7 +1,7 @@
 <!--
 Author: zusheng
 Date: 2022-05-01 23:49:11
-LastEditTime: 2022-05-15 01:12:48
+LastEditTime: 2022-05-16 09:24:29
 Description: 弹出歌曲选项
 FilePath: \uni-preset-vue-vite-ts\src\components\ThePopupSong.vue
 -->
@@ -9,17 +9,17 @@ FilePath: \uni-preset-vue-vite-ts\src\components\ThePopupSong.vue
 <script lang="ts" setup>
 import { useStore as usePlayerStore } from '@/store/player'
 import ThePopupFrame from './ThePopupFrame.vue'
-import icon0 from '@/static/d5w_b.png'
-import icon1 from '@/static/ex9_b.png'
-import icon2 from '@/static/d5u_b.png'
-import icon3 from '@/static/ex5_b.png'
-import icon4 from '@/static/d5w_b.png'
-import icon5 from '@/static/e9p_b.png'
-import icon6 from '@/static/en0_b.png'
-import icon7 from '@/static/ea9_b.png'
-import icon8 from '@/static/e_6_b.png'
-import icon9 from '@/static/e_1_b.png'
-import icon10 from '@/static/eax_b.png'
+// import icon0 from '@/static/d5w_b.png'
+// import icon1 from '@/static/ex9_b.png'
+// import icon2 from '@/static/d5u_b.png'
+// import icon3 from '@/static/ex5_b.png'
+// import icon4 from '@/static/d5w_b.png'
+// import icon5 from '@/static/e9p_b.png'
+// import icon6 from '@/static/en0_b.png'
+// import icon7 from '@/static/ea9_b.png'
+// import icon8 from '@/static/e_6_b.png'
+// import icon9 from '@/static/e_1_b.png'
+// import icon10 from '@/static/eax_b.png'
 
 const playerStore = usePlayerStore()
 
@@ -38,6 +38,19 @@ function addQueue(data: any) {
     duration: 2000
   })
   close()
+}
+
+// 前往歌手页面
+function toArtist(data: any) {
+  uni.showActionSheet({
+    itemList: data.ar.map((v: any) => v.name),
+    success: function (res) {
+      console.log(data.ar[res.tapIndex])
+    },
+    fail: function (res) {
+      console.log(res.errMsg)
+    }
+  })
 }
 
 const rootCdn = 'http://cdn.zusheng.club/weixin/'
@@ -83,14 +96,15 @@ const itemList = [
     title: '歌手：',
     disabled: false,
     icon: 'e9p_b.png',
+    func: (data: any) => toArtist(data),
     value: 'artist',
     canRedirect: true
   },
   {
-    title: '创作者：',
+    title: '专辑：',
     disabled: false,
     icon: 'en0_b.png',
-    value: 'creator',
+    value: 'album',
     canRedirect: true
   },
   {

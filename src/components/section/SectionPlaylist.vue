@@ -1,7 +1,7 @@
 <!--
 Author: zusheng
 Date: 2022-04-30 21:25:28
-LastEditTime: 2022-05-11 22:49:06
+LastEditTime: 2022-05-15 11:58:11
 Description: 首页分区-播放列表卡片
 FilePath: \uni-preset-vue-vite-ts\src\components\section\SectionPlaylist.vue
 -->
@@ -21,10 +21,12 @@ const props = defineProps<{
     scrollList: Array<any>
   }
 }>()
+
+const emit = defineEmits(['more'])
 </script>
 
 <template>
-  <section-frame :title="props.title" :more="true">
+  <section-frame :title="props.title" :more="true" @more="emit('more')">
     <template #default>
       <!-- 歌单列表 -->
       <scroll-view class="section-card__main" :scroll-x="true" :enable-flex="true">

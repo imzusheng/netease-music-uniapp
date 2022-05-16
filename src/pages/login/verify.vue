@@ -1,7 +1,7 @@
 <!--
 Author: zusheng
 Date: 2022-05-09 13:57:08
-LastEditTime: 2022-05-14 14:58:12
+LastEditTime: 2022-05-15 14:08:38
 Description: 验证码页面
 FilePath: \uni-preset-vue-vite-ts\src\pages\login\verify.vue
 -->
@@ -154,13 +154,7 @@ function reSendCode() {
   <page-meta :page-style="store.getPageMetaStyle" />
 
   <!-- ↓ 自定义导航 -->
-  <the-nav-bar
-    :title="'手机号登陆'"
-    :back="true"
-    :filter="false"
-    title-color="black"
-    theme-color="0,0,0,0"
-  />
+  <the-nav-bar :title="'手机号登陆'" :back="true" :filter="false" :bg="true" />
 
   <view class="login-at-phone">
     <view class="login-at-phone__main">
@@ -240,6 +234,15 @@ function reSendCode() {
       .login-at-phone__main-input-content {
         height: 32rpx;
         width: 100%;
+        color: var(--theme-text-title-color) !important;
+
+        /deep/.input-placeholder {
+          color: var(--theme-text-sub-color);
+        }
+
+        /deep/.uni-input-input {
+          color: var(--theme-text-title-color) !important;
+        }
       }
     }
 

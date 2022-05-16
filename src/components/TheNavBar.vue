@@ -21,7 +21,7 @@ const filter = computed(() => {
   return props.filter
 })
 const titleColor = computed(() => {
-  return store.getCurTheme.textTitleColor
+  return store.getCurTheme.navigationBarColor
 })
 const themeColor = computed(() => {
   return props.bg ? store.getCurTheme.backgroundColorCard : 'transparent'
@@ -56,9 +56,11 @@ function back() {
         :style="{ 'background-color': titleColor }"
         @click="back"
       />
+
       <text class="nav-bar__title text-ellipsis-single" :style="{ color: titleColor || 'black' }">
         {{ props.title }}
       </text>
+
       <view v-if="props.back" class="nav-bar__search"></view>
     </view>
   </view>
@@ -68,10 +70,10 @@ function back() {
 .nav-bar {
   z-index: 1001;
   position: fixed;
-  top: 0;
+  top: -10px;
   left: 0;
   width: 100%;
-  padding-top: var(--status-bar-height);
+  padding-top: calc(var(--status-bar-height) + 10px);
   height: var(--nav-tab-height-custom);
   overflow: hidden;
 

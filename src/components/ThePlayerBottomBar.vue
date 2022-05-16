@@ -1,12 +1,13 @@
 <!--
 Author: zusheng
 Date: 2022-04-27 10:34:18
-LastEditTime: 2022-05-14 21:52:48
+LastEditTime: 2022-05-16 00:17:25
 Description: 底部小播放器
 FilePath: \uni-preset-vue-vite-ts\src\components\ThePlayerBottomBar.vue
 -->
 <script lang="ts" setup>
 import { useStore as usePlayerStore } from '@/store/player'
+import { computed } from 'vue'
 
 const playerStore = usePlayerStore()
 
@@ -25,11 +26,14 @@ function toQueue() {
 function playSong(status: boolean) {
   !status ? playerStore.setPlayerPause() : playerStore.setPlayerPlay()
 }
+
+const devEnv = computed(() => uni.getSystemInfoSync().platform === 'devtools')
 </script>
 
 <template>
   <view
     class="bottom-bar-player"
+    :class="{ 'bottom-safe-area-fixed': !devEnv }"
     @tap.stop.prevent="tapPlayerHandler"
     v-if="playerStore.playerInfo.payload"
   >
@@ -74,20 +78,26 @@ function playSong(status: boolean) {
   </view>
 </template>
 
-<style lang="less">
+<style lang="less" scoped>
+.bottom-safe-area-fixed {
+  padding-bottom: constant(safe-area-inset-bottom);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
 .bottom-bar-player {
   width: 100%;
   // 播放器高度
   height: var(--player-height-custom);
   position: fixed;
-  z-index: 999;
+  z-index: 997;
   left: 0;
   right: 0;
-  padding-bottom: constant(safe-area-inset-bottom);
-  padding-bottom: env(safe-area-inset-bottom);
   bottom: var(--window-bottom);
+  background: var(--theme-background-color-card);
+  /* #ifndef H5 */
   background: var(--theme-filter-color);
   backdrop-filter: saturate(200%) blur(20px);
+  /* #endif */
 
   .bottom-bar-player-spacing {
     width: 100%;

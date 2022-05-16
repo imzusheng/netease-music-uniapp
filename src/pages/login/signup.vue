@@ -1,7 +1,7 @@
 <!--
 Author: zusheng
 Date: 2022-05-09 17:14:50
-LastEditTime: 2022-05-14 14:57:25
+LastEditTime: 2022-05-15 14:09:09
 Description: 注册页面
 FilePath: \uni-preset-vue-vite-ts\src\pages\login\signup.vue
 -->
@@ -86,13 +86,7 @@ function toNext() {
   <page-meta :page-style="store.getPageMetaStyle" />
 
   <!-- ↓ 自定义导航 -->
-  <the-nav-bar
-    :title="'注册账号'"
-    :back="true"
-    :filter="false"
-    title-color="black"
-    theme-color="0,0,0,0"
-  />
+  <the-nav-bar :title="'注册账号'" :back="true" :filter="false" :bg="true" />
 
   <view class="login-at-phone">
     <view class="login-at-phone__main">
@@ -191,6 +185,15 @@ function toNext() {
       .login-at-phone__main-input-content {
         height: 32rpx;
         width: 100%;
+        color: var(--theme-text-title-color) !important;
+
+        /deep/.input-placeholder {
+          color: var(--theme-text-sub-color);
+        }
+
+        /deep/.uni-input-input {
+          color: var(--theme-text-title-color) !important;
+        }
       }
     }
 

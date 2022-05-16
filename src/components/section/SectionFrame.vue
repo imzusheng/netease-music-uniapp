@@ -1,7 +1,7 @@
 <!--
 Author: zusheng
 Date: 2022-04-30 21:25:28
-LastEditTime: 2022-05-15 00:03:04
+LastEditTime: 2022-05-15 20:03:19
 Description: 主页列表通用框架
 FilePath: \uni-preset-vue-vite-ts\src\components\section\SectionFrame.vue
 -->
@@ -14,6 +14,8 @@ const props = defineProps<{
   // 显示更多按钮
   more: boolean
 }>()
+
+const emit = defineEmits(['more'])
 </script>
 
 <template>
@@ -21,10 +23,10 @@ const props = defineProps<{
     <slot name="title">
       <!-- 标题 -->
       <view class="section-card__title">
-        <text>{{ props.title }}</text>
+        <text class="text-ellipsis-single">{{ props.title }}</text>
         <!-- 查看更多按钮 -->
-        <view class="section-card__title-btn" v-if="props.more">
-          <text>更多</text>
+        <view class="section-card__title-btn" v-if="props.more" @tap="emit('more')">
+          <text class="text-ellipsis-single">更多</text>
           <!-- 更多图标 -->
           <view class="section-card__title-btn-icon" />
         </view>

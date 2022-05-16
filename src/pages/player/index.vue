@@ -1,7 +1,7 @@
 <!--
 Author: zusheng
 Date: 2022-05-11 10:36:02
-LastEditTime: 2022-05-13 22:30:01
+LastEditTime: 2022-05-15 23:29:53
 Description: 完整版播放器界面
 FilePath: \uni-preset-vue-vite-ts\src\pages\player\index.vue
 -->
@@ -62,6 +62,9 @@ function setPlayerMode() {
 
 // 打开代播列表
 function toQueue() {
+  uni.vibrateShort({
+    fail: () => {}
+  })
   pageType.value = pageType.value === 'poster' ? 'queue' : 'poster'
 }
 
@@ -195,14 +198,14 @@ const backgroundLoad = ref<boolean>(false)
 
 <style lang="less" scoped>
 .detail-player {
-  width: 100vw;
-  height: 100vh;
-  overflow: hidden;
+  position: fixed;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  position: fixed;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
   background-color: rgba(39, 39, 39, 1);
 
   .detail-player__bg-image {

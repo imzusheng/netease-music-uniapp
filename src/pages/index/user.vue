@@ -1,7 +1,7 @@
 <!--
 Author: zusheng
 Date: 2022-05-08 16:47:28
-LastEditTime: 2022-05-14 22:37:56
+LastEditTime: 2022-05-15 14:53:49
 Description: 用户主页
 FilePath: \uni-preset-vue-vite-ts\src\pages\index\user.vue
 -->
@@ -13,7 +13,7 @@ import ThePlayerBottomBar from '@/components/ThePlayerBottomBar.vue'
 import { convertCount } from '@/common/util'
 // import TheNotRegister from '@/components/TheNotRegister.vue'
 import { onHide, onShow, onReady } from '@dcloudio/uni-app'
-import { reactive, ref } from 'vue'
+import { reactive, ref, computed } from 'vue'
 import { useStore as useUserStore } from '@/store/user'
 import { useStore } from '@/store'
 
@@ -25,8 +25,6 @@ const data = reactive<any>({
   // 初始化状态
   init: false,
 
-  // 公共组件是否显示
-  curPageShow: false,
   // 用户信息
   user: {},
 
@@ -41,11 +39,9 @@ const data = reactive<any>({
 })
 
 onShow(() => {
-  data.curPageShow = true
-})
-
-onHide(() => {
-  data.curPageShow = false
+  store.setTheme('raw', {
+    navigationBarColor: '#ffffff'
+  })
 })
 
 onReady(() => {
@@ -123,8 +119,9 @@ function observeSection() {
     .relativeToViewport({ top: -100 })
     .observe('.user-main-info', (res: any) => {
       navShow.value = res.intersectionRatio < 0.999
+      const navShowColor = store.themeConfig.theme === 'dark' ? '#ffffff' : '#000000'
       uni.setNavigationBarColor({
-        frontColor: navShow.value ? '#000000' : '#ffffff',
+        frontColor: navShow.value ? navShowColor : '#ffffff',
         backgroundColor: '#fff'
       })
     })
@@ -134,10 +131,12 @@ function openPopup() {
   if (!userStore.getIsAuth)
     uni.$emit('popupOpen', [{ name: '手机登录' }, { name: '邮箱登录' }, { name: '二维码登录' }])
 }
+
+const pageStyle = computed(() => store.getPageMetaStyle)
 </script>
 
 <template>
-  <page-meta :page-style="store.getPageMetaStyle" />
+  <page-meta :page-style="pageStyle" />
 
   <!-- ↓ 自定义导航 -->
   <the-nav-bar
@@ -359,7 +358,7 @@ function openPopup() {
         // 为空
         .user-main__playlist-spacing-empty {
           padding: 48rpx 0;
-          color: rgba(0, 0, 0, 0.5);
+          color: var(--theme-text-sub-color);
           text-align: center;
         }
 

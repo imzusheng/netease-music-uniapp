@@ -4,7 +4,7 @@ import CardPoster from '@/components/CardPoster.vue'
 import TheNavBar from '@/components/TheNavBar.vue'
 import ThePopupSong from '@/components/ThePopupSong.vue'
 import ThePlayerBottomBar from '@/components/ThePlayerBottomBar.vue'
-import { onLoad, onPageScroll, onReachBottom } from '@dcloudio/uni-app'
+import { onLoad, onPageScroll, onReachBottom, onShow } from '@dcloudio/uni-app'
 import { reactive, computed, onMounted, ref } from 'vue'
 import { useStore } from '@/store'
 
@@ -19,7 +19,11 @@ const data = reactive<any>({
   trackIds: []
 })
 
-store.setTheme('raw')
+onShow(() => {
+  store.setTheme('raw', {
+    navigationBarColor: '#ffffff'
+  })
+})
 
 onPageScroll(() => {})
 
@@ -99,20 +103,25 @@ onMounted(() => {
     thresholds: [0.8],
     initialRatio: 1
   }
+
   uni
     .createIntersectionObserver(detailPlaylistRef.value, options)
     .relativeToViewport({ bottom: 0 })
     .observe(`.observer-placeholder`, (res: any) => {
       const show = res.intersectionRatio < 0.8
       navShow.value = show
-      uni.setNavigationBarColor({
-        frontColor: show ? '#000000' : '#ffffff',
-        backgroundColor: '#fff'
+
+      const navShowColor = store.themeConfig.theme === 'dark' ? '#ffffff' : '#000000'
+      const navHideColor = store.themeConfig.theme === 'dark' ? '#ffffff' : '#000000'
+
+      store.setTheme('raw', {
+        navigationBarColor: navShow.value ? navShowColor : navHideColor
       })
     })
 })
 
 const pageStyle = computed(() => store.getPageMetaStyle)
+const actionBgColor = computed(() => store.getCurTheme.backgroundColorCard)
 </script>
 
 <template>
@@ -210,7 +219,7 @@ const pageStyle = computed(() => store.getPageMetaStyle)
       </view>
 
       <!-- 歌单列表 -->
-      <list-songs :track-ids="data.trackIds" :infinite="true" action-bg="255, 255, 255, 1" />
+      <list-songs :track-ids="data.trackIds" :infinite="true" :action-bg="actionBgColor" />
     </view>
   </view>
 </template>
@@ -245,6 +254,10 @@ const pageStyle = computed(() => store.getPageMetaStyle)
     height: calc(var(--playlist-banner-height) + var(--status-bar-height));
     backdrop-filter: saturate(120%) brightness(90%) blur(60px);
     clip-path: ellipse(220% 100% at 50% 0);
+    /* #ifdef H5 */
+    // firefox对backdrop-filter使用有限制，h5关闭
+    display: none;
+    /* #endif */
   }
   // 背景图片
   .detail-playlist__main-bg-color {
@@ -254,12 +267,17 @@ const pageStyle = computed(() => store.getPageMetaStyle)
     height: calc(var(--playlist-banner-height) + var(--status-bar-height));
     clip-path: ellipse(220% 100% at 50% 0);
     overflow: hidden;
-    background-color: rgb(151, 151, 152);
+    background-color: rgb(51, 51, 52);
     .detail-playlist__main-bg-image {
       position: absolute;
       width: 100%;
       height: 100%;
       transition: opacity 1s;
+      /* #ifdef H5 */
+      transition: none;
+      filter: saturate(120%) brightness(90%) blur(60px);
+      transform: scale(2);
+      /* #endif */
     }
   }
 
@@ -370,7 +388,9 @@ const pageStyle = computed(() => store.getPageMetaStyle)
     position: relative;
 
     .detail-playlist__action-shadow {
+      overflow: hidden;
       position: absolute;
+      // opacity: 0;
       z-index: 3;
       width: 554rpx;
       height: var(--pl-action-height);
@@ -378,25 +398,38 @@ const pageStyle = computed(() => store.getPageMetaStyle)
       transform: translate(-50%, 0);
       z-index: 3;
       background: transparent;
-      opacity: 0.11;
       border-radius: var(--pl-action-height);
       box-shadow: 8rpx calc(var(--pl-action-height) / 4) 16rpx var(--theme-shadow-color),
         -16rpx calc(var(--pl-action-height) / 4) 16rpx var(--theme-shadow-color);
+
+      /* #ifdef H5 */
+      &::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 3;
+        width: 100%;
+        height: 100%;
+        filter: blur(20px);
+        transform: scale(2);
+        background: var(--theme-background-color);
+      }
+      /* #endif */
     }
 
     .detail-playlist__action-container {
-      // display: none;
       position: absolute;
       left: 50%;
       width: 554rpx;
       display: flex;
       z-index: 4;
       align-items: center;
-      backdrop-filter: blur(20px);
       transform: translate(-50%, 0);
       height: var(--pl-action-height);
       clip-path: inset(0 round var(--pl-action-height));
-      background: linear-gradient(var(--theme-filter-color), var(--theme-filter-color));
+      backdrop-filter: blur(20px);
+      background: var(--theme-filter-color);
 
       .detail-playlist__action-spacing {
         height: 38.4rpx;

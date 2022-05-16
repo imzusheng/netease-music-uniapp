@@ -1,18 +1,38 @@
+<!--
+Author: zusheng
+Date: 2022-05-11 13:51:28
+LastEditTime: 2022-05-16 10:43:38
+Description: 入口
+FilePath: \uni-preset-vue-vite-ts\src\App.vue
+-->
 <script setup lang="ts">
 import { createPlayer } from '@/common/player'
 import { useStore as useMainStore } from '@/store'
 import { useStore as usePlayerStore } from '@/store/player'
 import { useStore as useUserStore } from '@/store/user'
-import { onLaunch } from '@dcloudio/uni-app'
+import { onLaunch, onThemeChange } from '@dcloudio/uni-app'
 
 const mainStore = useMainStore()
 const playerStore = usePlayerStore()
 const userStore = useUserStore()
+const systemInfo: any = uni.getSystemInfoSync()
 
 onLaunch(() => {
-  mainStore.setTheme('dark')
+  if (['light', 'dark'].includes(systemInfo.theme)) {
+    mainStore.setTheme(systemInfo.theme)
+  } else if (['light', 'dark'].includes(uni.getStorageSync('theme'))) {
+    mainStore.setTheme(uni.getStorageSync('theme'))
+  } else {
+    mainStore.setTheme('light')
+  }
   initPlayer()
   initUserAuth()
+})
+
+onThemeChange((res: any) => {
+  if (['light', 'dark'].includes(res.theme)) {
+    mainStore.setTheme(res.theme)
+  }
 })
 
 /**
@@ -72,14 +92,11 @@ body {
   font-family: open sans, Helvetica, Arial, sans-serif;
   -webkit-overflow-scrolling: touch;
   box-sizing: border-box;
-  background: transparent;
 }
 
-/* #ifdef H5 */
-.uni-tabbar-bottom {
-  bottom: 0 !important;
+.uni-app--showtabbar uni-page-wrapper::after {
+  display: none;
 }
-/* #endif */
 
 ::-webkit-scrollbar {
   display: none;
@@ -133,8 +150,8 @@ body {
 .fixed-placeholder {
   width: 100%;
   background-color: transparent;
-  height: constant(safe-area-inset-bottom);
-  height: env(safe-area-inset-bottom);
+  height: calc(constant(safe-area-inset-bottom));
+  height: calc(env(safe-area-inset-bottom));
 }
 
 // 隐形占位，用于observerAPI

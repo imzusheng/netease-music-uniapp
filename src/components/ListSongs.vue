@@ -1,7 +1,7 @@
 <!--
 Author: zusheng
 Date: 2022-04-26 23:52:31
-LastEditTime: 2022-05-15 01:18:08
+LastEditTime: 2022-05-15 11:25:19
 Description: 歌曲列表
 FilePath: \uni-preset-vue-vite-ts\src\components\ListSongs.vue
 -->
@@ -24,7 +24,7 @@ const props = defineProps<{
   // 是否用虚拟滚动列表
   infinite: boolean
 
-  // 播放全部按钮背景色，rgba
+  // 播放全部按钮栏背景色
   actionBg: string
 }>()
 
@@ -111,7 +111,7 @@ function playAll() {
 <template>
   <view class="list-songs">
     <!-- 播放全部按钮 -->
-    <view class="list-songs__action">
+    <view class="list-songs__action" :style="{ 'background-color': actionBg }">
       <!-- 左侧 按钮 -->
       <view class="list-songs__action-left" @tap.stop.prevent="playAll">
         <view class="list-songs__action-left-play" />
@@ -128,8 +128,10 @@ function playAll() {
     </view>
 
     <!-- 歌单列表 s -->
-    <list-songs-infinite v-if="props.infinite" :songs="data.songs" />
-    <list-songs-common v-else :songs="data.songs" />
+    <view style="padding: 0 23rpx">
+      <list-songs-infinite v-if="props.infinite" :songs="data.songs" />
+      <list-songs-common v-else :songs="data.songs" />
+    </view>
     <!-- 歌单列表 e -->
   </view>
 </template>
@@ -141,8 +143,6 @@ function playAll() {
   height: 100%;
   flex: 1;
   position: relative;
-  // background: #fff;
-  padding: 0 23rpx;
   z-index: 1;
   box-sizing: border-box;
   margin-bottom: 54px;
@@ -154,14 +154,12 @@ function playAll() {
     top: calc(var(--nav-tab-height-custom) + var(--status-bar-height) - 1px);
     left: 0;
     height: 102.5rpx;
-    width: 100vw;
-    // padding: 0 23rpx;
-    // margin-left: -23rpx;
+    width: 100%;
+    padding: 0 23rpx;
     box-sizing: border-box;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    background: var(--theme-background-color-card);
 
     .list-songs__action-left,
     .list-songs__action-right {

@@ -1,7 +1,7 @@
 <!--
 Author: zusheng
 Date: 2022-05-01 23:49:11
-LastEditTime: 2022-05-15 00:01:09
+LastEditTime: 2022-05-16 00:16:29
 Description: 弹出层框架
 FilePath: \uni-preset-vue-vite-ts\src\components\ThePopupFrame.vue
 -->
@@ -81,7 +81,7 @@ function closePopup() {
   bottom: 0;
   width: 100vw;
   height: 100vh;
-  z-index: 9999;
+  z-index: 998;
   background: transparent;
   touch-action: none;
   color: var(--theme-text-title-color);
@@ -93,7 +93,7 @@ function closePopup() {
     left: 0;
     right: 0;
     bottom: 0;
-    background: rgba(0, 0, 0, 0.5);
+    background: rgba(0, 0, 0, 0.7);
     touch-action: none;
     transition: opacity 0.3s;
   }

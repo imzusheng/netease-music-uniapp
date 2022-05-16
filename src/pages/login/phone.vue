@@ -1,12 +1,13 @@
 <!--
 Author: zusheng
 Date: 2022-05-09 12:27:15
-LastEditTime: 2022-05-15 00:54:52
+LastEditTime: 2022-05-15 14:07:52
 Description: 通过手机登录
 FilePath: \uni-preset-vue-vite-ts\src\pages\login\phone.vue
 -->
 <script lang="ts" setup>
 import TheNavBar from '@/components/TheNavBar.vue'
+import { onShow } from '@dcloudio/uni-app'
 import { reactive } from 'vue'
 import { useStore as useMainStore } from '@/store'
 import { useStore as useUserStore } from '@/store/user'
@@ -25,6 +26,8 @@ const data = reactive<any>({
   // 使用 验证码/密码 登录 code/password
   type: 'code'
 })
+
+onShow(() => mainStore.setTheme('raw'))
 
 // 输入手机号
 function inputPhone(e: any) {
@@ -157,10 +160,11 @@ function nextStep() {
   </view>
 </template>
 
-<style lang="less" scoped>
+<style lang="less">
 .login-at-phone {
-  width: 100%;
   overflow: hidden;
+  width: 100%;
+  height: calc(100vh - var(--status-bar-height) - var(--nav-tab-height-custom));
   padding: calc(var(--status-bar-height) + var(--nav-tab-height-custom)) 0 0;
 
   .login-at-phone__main {
@@ -172,21 +176,22 @@ function nextStep() {
     .login-at-phone__main-title-h2 {
       font-size: 33.3rpx;
       font-weight: 700;
-      color: rgb(50, 51, 51);
+      color: var(--theme-text-title-color);
       line-height: 1;
     }
 
     .login-at-phone__main-title-p {
       margin-top: 24.4rpx;
       font-size: 25.64rpx;
-      color: rgb(153, 153, 153);
+      color: var(--theme-text-sub-color);
       line-height: 1;
     }
 
+    // 输入框容器
     .login-at-phone__main-input {
       height: 83.4rpx;
       width: 100%;
-      border-bottom: 1px solid rgb(232, 232, 232);
+      border-bottom: 1px solid var(--theme-border-color);
       display: flex;
       align-items: center;
       margin-top: 16rpx;
@@ -194,6 +199,15 @@ function nextStep() {
       .login-at-phone__main-input-content {
         height: 32rpx;
         width: 100%;
+        color: var(--theme-text-title-color) !important;
+
+        /deep/.input-placeholder {
+          color: var(--theme-text-sub-color);
+        }
+
+        /deep/.uni-input-input {
+          color: var(--theme-text-title-color) !important;
+        }
       }
     }
 
@@ -215,7 +229,7 @@ function nextStep() {
         border-radius: 80rpx;
         margin-bottom: 12px;
         color: #000;
-        border: 1px solid rgb(232, 232, 232);
+        border: 1px solid var(--theme-border-color);
         background-color: #fff;
       }
 

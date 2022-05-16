@@ -132,6 +132,16 @@
         "backgroundColorTop": "#fff",
         "backgroundColorBottom": "#F8F8F8"
       }
+    },
+    {
+      "path": "pages/customize/home",
+      "style": {
+        "navigationBarTextStyle": "black",
+        "navigationBarTitleText": "自定义主页",
+        "navigationStyle": "custom",
+        "backgroundColorTop": "#fff",
+        "backgroundColorBottom": "#F8F8F8"
+      }
     }
   ],
   "globalStyle": {

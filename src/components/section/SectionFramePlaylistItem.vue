@@ -20,7 +20,7 @@ function toDetail(data: any) {
       <card-poster
         v-if="props.data.picUrl"
         class="section-card__poster"
-        :pic-url="`${props.data.picUrl}?param=200y200`"
+        :pic-url="`${props.data.picUrl}?imageView&thumbnail=200y200`"
         :play-count="props.data.playCount"
       />
       <!-- 3.小标题 -->

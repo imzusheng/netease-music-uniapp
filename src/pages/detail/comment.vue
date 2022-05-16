@@ -1,7 +1,7 @@
 <!--
 Author: zusheng
 Date: 2022-05-10 11:02:19
-LastEditTime: 2022-05-15 00:52:07
+LastEditTime: 2022-05-16 00:36:36
 Description: 评论详情页面
 FilePath: \uni-preset-vue-vite-ts\src\pages\detail\comment.vue
 -->
@@ -164,7 +164,7 @@ function copy(content: string) {
 
   <the-nav-bar
     :back="true"
-    :title="`${data.title}（${convertCount(data.total)}）`"
+    :title="`${data.title}（${convertCount(data.total) || ''}）`"
     :filter="false"
     :bg="true"
   />
@@ -313,6 +313,7 @@ function copy(content: string) {
   padding-bottom: constant(safe-area-inset-bottom);
   padding-bottom: env(safe-area-inset-bottom);
   box-sizing: border-box;
+  background-color: var(--theme-background-color);
 
   //   排序方式
   .detail-comment-sort-type {
@@ -325,7 +326,7 @@ function copy(content: string) {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: #fff;
+    background: var(--theme-background-color-card);
     z-index: 2;
 
     .detail-comment-sort-type__title {
@@ -333,6 +334,7 @@ function copy(content: string) {
       line-height: 75.6rpx;
       font-size: 26rpx;
       font-weight: 600;
+      color: var(--theme-text-title-color);
     }
     .detail-comment-sort-type__list {
       height: 100%;
@@ -341,17 +343,17 @@ function copy(content: string) {
       margin: 0 -22.4rpx;
       // 选中样式
       .sort-type-checked {
-        color: #000 !important;
+        color: var(--theme-text-title-color) !important;
       }
       .detail-comment-sort-type__list-item {
         font-size: 26rpx;
         font-weight: 600;
         padding: 0 22.4rpx;
-        color: #9a9a9a;
+        color: var(--theme-text-sub-color);
 
         &:not(:first-child):not(:last-child) {
-          border-left: 1px solid #e6e6e6;
-          border-right: 1px solid #e6e6e6;
+          border-left: 1px solid var(--theme-border-color);
+          border-right: 1px solid var(--theme-border-color);
         }
       }
     }
@@ -359,7 +361,7 @@ function copy(content: string) {
 
   // 父评论
   .owner-comment {
-    border-bottom: 16rpx solid rgb(242, 242, 242) !important;
+    border-bottom: 16rpx solid var(--theme-background-color) !important;
     .detail-comment-list-item__content {
       border: none !important;
     }
@@ -384,7 +386,7 @@ function copy(content: string) {
       min-height: 68rpx;
       width: calc(100vw - 60rpx - 86rpx);
       padding-bottom: 30.7rpx;
-      border-bottom: 1px solid rgb(232, 232, 232);
+      border-bottom: 1px solid var(--theme-border-color);
 
       //  row1
       .detail-comment-list-item__content-info {
@@ -394,13 +396,14 @@ function copy(content: string) {
 
         .detail-comment-list-item__content-info-user__name {
           font-size: 24rpx;
-          color: rgb(99, 99, 100);
+          color: var(--theme-text-title-color);
           line-height: 1;
+          opacity: 0.8;
         }
         .detail-comment-list-item__content-info-user__time {
           margin-top: 16rpx;
           font-size: 20rpx;
-          color: rgb(155, 155, 156);
+          color: var(--theme-text-sub-color);
           line-height: 1;
         }
 
@@ -408,7 +411,8 @@ function copy(content: string) {
         .detail-comment-list-item__content-info-like {
           display: flex;
           align-items: center;
-          color: rgb(151, 151, 152);
+          color: var(--theme-text-title-color);
+          opacity: 0.6;
           font-size: 18rpx;
           .content-info-like-text {
             padding-top: 8rpx;
@@ -416,7 +420,7 @@ function copy(content: string) {
           .content-info-like-icon {
             height: 100%;
             width: 57rpx;
-            background: rgb(151, 151, 152);
+            background: var(--theme-text-title-color);
             mask-image: url('@/static/ey7.png');
             mask-position: center;
             mask-repeat: no-repeat;
@@ -439,6 +443,7 @@ function copy(content: string) {
         padding-right: 30.7rpx;
         box-sizing: border-box;
         word-wrap: break-word;
+        color: var(--theme-text-title-color);
       }
 
       // row3
@@ -446,14 +451,14 @@ function copy(content: string) {
         font-size: 23.4rpx;
         line-height: 1;
         margin-top: 19.2rpx;
-        color: rgb(91, 124, 155);
+        color: rgb(91, 140, 175);
         display: flex;
         align-items: center;
 
         .content-more-icon {
           width: 23.4rpx;
           height: 23.4rpx;
-          background-color: rgb(91, 124, 155);
+          background-color: rgb(91, 140, 175);
           mask-image: url('@/static/icon-arrow-right.png');
           mask-position: center;
           mask-repeat: no-repeat;
@@ -470,7 +475,7 @@ function copy(content: string) {
     box-sizing: border-box;
     width: 100%;
     font-size: 24rpx;
-    color: rgba(0, 0, 0, 0.5);
+    color: var(--theme-text-sub-color);
   }
 }
 </style>

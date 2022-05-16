@@ -52,17 +52,16 @@
   "mp-weixin": {
     "appid": "wx2816d227f751770a",
     "lazyCodeLoading": "requiredComponents",
+    "darkmode": true,
     "setting": {
+      "darkmode": true,
       "urlCheck": true,
       "es6": true,
       "postcss": true,
       "minified": true
     },
     "requiredBackgroundModes": ["audio"],
-    "usingComponents": true,
-    "uniStatistics": {
-      "enable": false
-    }
+    "usingComponents": true
   },
   "mp-alipay": {
     "usingComponents": true

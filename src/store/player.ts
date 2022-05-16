@@ -118,6 +118,9 @@ export const useStore = defineStore('player', {
      * 开始播放
      */
     setPlayerPlay() {
+      uni.vibrateShort({
+        fail: () => {}
+      })
       const player = getPlayer()
       if (player.src) player.play()
       else this.load()
@@ -127,6 +130,9 @@ export const useStore = defineStore('player', {
      * 暂停播放
      */
     setPlayerPause() {
+      uni.vibrateShort({
+        fail: () => {}
+      })
       const player = getPlayer()
       if (player.src) player.pause()
       else this.load()

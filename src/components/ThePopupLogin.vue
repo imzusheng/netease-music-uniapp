@@ -1,7 +1,7 @@
 <!--
 Author: zusheng
 Date: 2022-05-01 23:49:11
-LastEditTime: 2022-05-14 16:41:40
+LastEditTime: 2022-05-15 14:11:31
 Description: 选择登录方式
 FilePath: \uni-preset-vue-vite-ts\src\components\ThePopupLogin.vue
 -->
@@ -57,7 +57,7 @@ function close() {
     width: 72rpx;
     flex-shrink: 0;
     margin-left: 20.5rpx;
-    background: rgba(51, 51, 52, 0.25);
+    background: var(--theme-text-sub-color);
     mask-size: 40rpx auto;
     mask-repeat: no-repeat;
     mask-image: url('@/static/icon-arrow-bottom.png');
@@ -79,7 +79,7 @@ function close() {
   }
 
   .item-hover {
-    background-color: rgba(0, 0, 0, 0.1);
+    background-color: var(--theme-background-color-card);
   }
 }
 </style>

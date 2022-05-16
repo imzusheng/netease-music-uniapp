@@ -7,13 +7,15 @@ import moment from 'moment'
 
 type Theme = {
   // 状态栏字体颜色
-  navigationBarColor: string
+  navigationBarColor: '#ffffff' | '#000000'
   // 主题色
   themeColor: string
   // 页面背景色
   backgroundColor: string
   // 内容卡片背景色
   backgroundColorCard: string
+  // 稍微强调色
+  backgroundColorClear: string
   // 标题色
   textTitleColor: string
   // 副标题辅助色
@@ -26,38 +28,75 @@ type Theme = {
   shadowColor: string
 }
 
+const dark: Theme = {
+  navigationBarColor: '#ffffff',
+  themeColor: '#D1403C',
+  backgroundColor: '#0E0E0E',
+  backgroundColorCard: '#151515',
+  backgroundColorClear: '#212121',
+  textTitleColor: '#ffffff',
+  textSubColor: '#626262',
+  borderColor: '#2A2A2A',
+  filterColor: 'rgba(19, 19, 20, 0.7)',
+  shadowColor: '#131313'
+}
+
+const light: Theme = {
+  navigationBarColor: '#000000',
+  themeColor: '#f9343d',
+  backgroundColor: '#F8F8F8',
+  backgroundColorCard: '#FFFFFF',
+  backgroundColorClear: '#f8f8f8',
+  textTitleColor: '#333333',
+  textSubColor: '#969696',
+  borderColor: '#E7E7E7',
+  filterColor: 'rgba(252, 252, 253, 0.7)',
+  shadowColor: '#F8F9FA'
+}
+
+Object.freeze(dark)
+Object.freeze(light)
+
 export const useStore = defineStore('main', {
   state: () => {
     return {
       // 是否防止滚动穿透
       overflow: false,
 
-      // 主题颜色配置
+      /**
+       * time 为了触发getPageMetaStyle更新，否则主题不会及时改变
+       */
+      time: Date.now(),
+
+      /**
+       * 主题颜色配置
+       */
       themeConfig: {
-        // dark / light
-        theme: 'dark',
+        theme: 'light' as 'dark' | 'light',
         dark: {
           navigationBarColor: '#ffffff',
           themeColor: '#D1403C',
           backgroundColor: '#0E0E0E',
           backgroundColorCard: '#151515',
+          backgroundColorClear: '#212121',
           textTitleColor: '#ffffff',
           textSubColor: '#626262',
           borderColor: '#2A2A2A',
           filterColor: 'rgba(19, 19, 20, 0.7)',
-          shadowColor: '#222222'
-        } as Theme,
+          shadowColor: '#131313'
+        },
         light: {
           navigationBarColor: '#000000',
           themeColor: '#f9343d',
           backgroundColor: '#F8F8F8',
           backgroundColorCard: '#FFFFFF',
+          backgroundColorClear: '#f8f8f8',
           textTitleColor: '#333333',
           textSubColor: '#969696',
           borderColor: '#E7E7E7',
           filterColor: 'rgba(252, 252, 253, 0.7)',
-          shadowColor: '#969696'
-        } as Theme
+          shadowColor: '#F8F9FA'
+        }
       } as any
     }
   },
@@ -70,38 +109,57 @@ export const useStore = defineStore('main', {
       const overflow: string = this.overflow ? 'overflow: hidden; ' : 'overflow: visible; '
 
       const curTheme: any = this.themeConfig[this.themeConfig.theme]
-      const themeColor: string = `background-color: ${curTheme.backgroundColor}; --theme-shadow-color: ${curTheme.shadowColor}; --theme-filter-color: ${curTheme.filterColor}; --theme-color: ${curTheme.themeColor}; --theme-background-color: ${curTheme.backgroundColor}; --theme-background-color-card: ${curTheme.backgroundColorCard}; --theme-text-title-color: ${curTheme.textTitleColor}; --theme-text-sub-color: ${curTheme.textSubColor}; --theme-border-color: ${curTheme.borderColor};`
+      const themeColor: string = `--theme-background-color-clear: ${curTheme.backgroundColorClear}; background-color: ${curTheme.backgroundColor}; --theme-shadow-color: ${curTheme.shadowColor}; --theme-filter-color: ${curTheme.filterColor}; --theme-color: ${curTheme.themeColor}; --theme-background-color: ${curTheme.backgroundColor}; --theme-background-color-card: ${curTheme.backgroundColorCard}; --theme-text-title-color: ${curTheme.textTitleColor}; --theme-text-sub-color: ${curTheme.textSubColor}; --theme-border-color: ${curTheme.borderColor};`
 
-      return overflow + volume + themeColor
+      return `--update-time: ${this.time}; ` + overflow + volume + themeColor
     },
     getCurTheme(): Theme {
       return this.themeConfig[this.themeConfig.theme]
     }
   },
   actions: {
-    setTheme(theme: 'dark' | 'light' | 'raw'): void {
-      if (theme !== 'raw') this.themeConfig.theme = theme
+    /**
+     *
+     * @param theme raw表示主题不变，但是重新执行以下setTabBarStyle、setBackgroundColor....
+     * @param options 有的页面颜色需要特殊情况，通过此处传入合并
+     */
+    setTheme(theme: 'dark' | 'light' | 'raw', options?: Theme | object): void {
+      this.time = Date.now()
 
-      const curTheme = this.getCurTheme
-      uni.setTabBarStyle({
-        color: curTheme.textSubColor,
-        selectedColor: curTheme.themeColor,
-        backgroundColor: curTheme.backgroundColorCard,
-        fail: () => {}
-      })
+      if (theme !== 'raw') {
+        this.themeConfig.theme = theme
+        uni.setStorageSync('theme', theme)
+      }
+
+      if (!!options) {
+        Object.assign(this.themeConfig[this.themeConfig.theme], options)
+      } else {
+        this.themeConfig.dark = Object.assign({}, dark)
+        this.themeConfig.light = Object.assign({}, light)
+      }
+      const mergeOptions = this.getCurTheme
+
+      if (typeof uni.setTabBarStyle === 'function') {
+        uni.setTabBarStyle({
+          color: mergeOptions.textSubColor,
+          selectedColor: mergeOptions.themeColor,
+          backgroundColor: mergeOptions.backgroundColorCard,
+          fail: () => {}
+        })
+      }
 
       if (typeof uni.setBackgroundColor === 'function') {
         uni.setBackgroundColor({
-          backgroundColor: curTheme.backgroundColor,
-          backgroundColorTop: curTheme.backgroundColor,
-          backgroundColorBottom: curTheme.backgroundColor,
+          backgroundColor: mergeOptions.backgroundColor,
+          backgroundColorTop: mergeOptions.backgroundColor,
+          backgroundColorBottom: mergeOptions.backgroundColor,
           fail: () => {}
         })
       }
 
       if (typeof uni.setNavigationBarColor === 'function') {
         uni.setNavigationBarColor({
-          frontColor: curTheme.navigationBarColor,
+          frontColor: mergeOptions.navigationBarColor,
           backgroundColor: '#fff',
           fail: () => {}
         })
@@ -114,7 +172,7 @@ export const useStore = defineStore('main', {
 
     // 获取首页数据 (可选登录)
     async getHomePage(offset: number): Promise<any> {
-      const res = await get(API.GET_HOME_PAGE, { cursor: { offset }, refresh: true }, true, false)
+      const res = await get(API.GET_HOME_PAGE, { cursor: { offset }, refresh: '' }, true, false)
       const cursor = res?.data?.cursor ? JSON.parse(res.data.cursor) : ''
       return {
         offset: cursor.offset ? cursor.offset : 0,
@@ -301,13 +359,13 @@ export const useStore = defineStore('main', {
           // 歌曲数量
           trackCount: data.playlist.trackCount,
           // 订阅数量
-          subscribedCount: convertCount(data.playlist.subscribedCount),
+          subscribedCount: convertCount(data.playlist.subscribedCount) as string,
           // 播放数量
-          playCount: convertCount(data.playlist.playCount),
+          playCount: convertCount(data.playlist.playCount) as string,
           // 评论数量
-          commentCount: convertCount(data.playlist.commentCount),
+          commentCount: convertCount(data.playlist.commentCount) as string,
           // 分享数量
-          shareCount: convertCount(data.playlist.shareCount),
+          shareCount: convertCount(data.playlist.shareCount) as string,
           // 发布日期
           createTime: moment(data.playlist.createTime).format('YYYY年M月D日'),
           // 歌曲id集合

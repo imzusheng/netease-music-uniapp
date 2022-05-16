@@ -1,7 +1,7 @@
 /*
  * @Author: zusheng
  * @Date: 2022-04-24 14:46:24
- * @LastEditTime: 2022-05-11 18:41:47
+ * @LastEditTime: 2022-05-15 18:50:43
  * @Description:
  * @FilePath: \uni-preset-vue-vite-ts\src\common\util.ts
  */
@@ -43,7 +43,9 @@ export const durationConvertMinutes = (time: number | string) => {
  * @param count 数量
  * @returns 转换后
  */
-export const convertCount = (sum: number) => {
+export const convertCount = (sum: number): string | number | undefined => {
+  if (sum === 0) return undefined
+
   if (sum >= 100000000) {
     return (sum / 100000000).toFixed(2) + '亿'
   } else if (sum >= 10000) {

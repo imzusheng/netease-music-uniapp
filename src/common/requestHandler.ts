@@ -5,65 +5,217 @@ import { convertCount } from '@/common/util'
 import moment from 'moment'
 
 export const getHomePageHandler = (blocks: any) => {
-  const startTime = Date.now()
   const data: any = {}
-  try {
-    blocks.forEach((block: any) => {
+
+  // console.log('\n\n\nstart')
+
+  blocks.forEach((block: any) => {
+    try {
       const key = block.blockCode.toLowerCase()
+      // console.log(key, '  ------------------------------->  ', block?.uiElement?.subTitle?.title)
+      // console.dir(block)
 
       switch (block.blockCode) {
         case 'HOMEPAGE_BANNER':
           data[key] = getBanner(block)
           break
 
+        // 推荐歌单
         case 'HOMEPAGE_BLOCK_PLAYLIST_RCMD':
-          // 推荐歌单
           data[key] = getRcmdPlaylist(block)
           break
 
-        case 'HOMEPAGE_BLOCK_STYLE_RCMD':
-          // 个性推荐-单曲
-          data[key] = getRcmdStyleSong(block)
-          break
-
+        //  新歌、新碟、新专辑
         case 'HOMEPAGE_BLOCK_NEW_ALBUM_NEW_SONG':
-          //  新歌、新碟、新专辑
           data[key] = getNewAlbumSongs(block)
           break
 
+        // 热门话题
         case 'HOMEPAGE_BLOCK_HOT_TOPIC':
-          // 热门话题
           data[key] = getHotTopic(block)
           break
 
+        // 音乐日历
         case 'HOMEPAGE_MUSIC_CALENDAR':
-          // 音乐日历
           data[key] = getMusicCalendar(block)
           break
 
-        case 'HOMEPAGE_BLOCK_MGC_PLAYLIST':
-          // 网易云音乐的雷达歌单 HOMEPAGE_BLOCK_MGC_PLAYLIST
-          data[key] = getMgcPlaylist(block)
-          break
-
-        case 'HOMEPAGE_BLOCK_OFFICIAL_PLAYLIST':
-          // 专属场景歌单
-          data[key] = getOfcPlaylist(block)
-          break
-
+        // 热门博客|有声书
         case 'HOMEPAGE_VOICELIST_RCMD':
-          // 热门博客|有声书
           data[key] = getRcmdVoiceList(block)
           break
+
+        // 网易云音乐的雷达歌单
+        case 'HOMEPAGE_BLOCK_MGC_PLAYLIST':
+        // 专属场景歌单
+        case 'HOMEPAGE_BLOCK_OFFICIAL_PLAYLIST':
+        // 音乐视频
+        case 'HOMEPAGE_BLOCK_VIDEO_PLAYLIST':
+        // 电音专区
+        case 'HOMEPAGE_BLOCK_ZONE_ELECTRONIC':
+        // 助眠解压
+        case 'HOMEPAGE_BLOCK_SLEEPING':
+          data[key] = getPlaylistCommon(block)
+          break
+
+        // 相声曲艺
+        case 'HOMEPAGE_BLOCK_COMIC_OPERA':
+        // 有声剧场
+        case 'HOMEPAGE_BLOCK_THEATER':
+          data[key] = getVoiceCommon(block)
+          break
+
+        // 个性推荐-单曲
+        case 'HOMEPAGE_BLOCK_STYLE_RCMD':
+        // DJ专区
+        case 'HOMEPAGE_BLOCK_ZONE_DJ':
+        // 经典专区
+        case 'HOMEPAGE_BLOCK_ZONE_CLASSIC':
+        // 爵士专区
+        case 'HOMEPAGE_BLOCK_ZONE_JAZZ':
+        // 摇滚专区
+        case 'HOMEPAGE_BLOCK_ZONE_ROCK':
+        // 古典专区
+        case 'HOMEPAGE_BLOCK_ZONE_CLASSICAL':
+        // 说唱专区
+        case 'HOMEPAGE_BLOCK_ZONE_HIPHOP':
+          data[key] = getSongCommon(block)
+          break
+
+        default:
+          // console.log(
+          //   key,
+          //   '  ------------------------------->  ',
+          //   block?.uiElement?.subTitle?.title
+          // )
+          // console.dir(block)
+          break
       }
-    })
-  } catch (e) {
-    //TODO handle the exception
-    console.warn(e)
-  }
+    } catch (e) {
+      console.error(e)
+    }
+  })
+  // console.log('end\n\n\n')
 
   function getBanner(block: any) {
-    return block.extInfo.banners
+    return {
+      data: block.extInfo.banners
+    }
+  }
+
+  /**
+   * 歌单类型数据的通用方法：
+   *
+   * 网易云音乐的雷达歌单 HOMEPAGE_BLOCK_MGC_PLAYLIST
+   *
+   * 音乐视频 HOMEPAGE_BLOCK_VIDEO_PLAYLIST
+   *
+   * 专属场景歌单 HOMEPAGE_BLOCK_OFFICIAL_PLAYLIST
+   *
+   * 电音专区 HOMEPAGE_BLOCK_ZONE_ELECTRONIC
+   *
+   * 助眠解压 HOMEPAGE_BLOCK_SLEEPING
+   */
+  function getPlaylistCommon(block: any) {
+    const title = block.uiElement.subTitle.title
+    const list = block.creatives.map((creative: any) => {
+      const resource = creative.resources[0]
+      // 助眠解压的uiElement是特殊情况，保存在resource.uiElement
+      const uiElement = creative.uiElement || resource.uiElement
+      const playCount = convertCount(resource.resourceExtInfo?.playCount ?? 0)
+      return {
+        playCount,
+        payload: resource.resourceId,
+        type: resource.resourceType,
+        title: uiElement.mainTitle.title,
+        picUrl: uiElement.image.imageUrl
+      }
+    })
+
+    return {
+      title,
+      list
+    }
+  }
+
+  /**
+   * 获取声音类型block的方法
+   *
+   * 相声曲艺 HOMEPAGE_BLOCK_COMIC_OPERA
+   *
+   * 有声剧场 HOMEPAGE_BLOCK_THEATER
+   */
+  function getVoiceCommon(block: any) {
+    const title = block.uiElement.subTitle.title
+    const list = block.creatives.map((creative: any) => {
+      const resource = creative
+      const uiElement = creative.uiElement
+      const playCount = convertCount(resource.creativeExtInfoVO.playCount) || 0
+      return {
+        playCount,
+        payload: resource.resourceId,
+        type: resource.resourceType,
+        title: uiElement.mainTitle.title,
+        picUrl: uiElement.image.imageUrl
+      }
+    })
+
+    return {
+      title,
+      list
+    }
+  }
+
+  /**
+   * 获取单曲类型block的方法
+   *
+   * 个性推荐-单曲 HOMEPAGE_BLOCK_STYLE_RCMD
+   *
+   * DJ专区-潮流网络热歌 HOMEPAGE_BLOCK_ZONE_DJ
+   */
+  function getSongCommon(block: any) {
+    const title = block.uiElement.subTitle.title
+    // 扁平化所有歌曲数据，
+    const flatResource = block.creatives
+      .map((creative: any) => {
+        return creative.resources.map((resource: any) => {
+          const uiElement = resource.uiElement
+          return {
+            title: uiElement.mainTitle.title,
+            mv: resource.resourceExtInfo.song.mv,
+            artist: pickUpName(resource.resourceExtInfo.song.ar),
+            picUrl: uiElement.image.imageUrl,
+            payload: resource.resourceId,
+            subTitle:
+              uiElement?.subTitle?.titleType !== 'songRcmdTag' ? uiElement?.subTitle?.title : '',
+            tags: uiElement?.subTitle?.titleType === 'songRcmdTag' ? uiElement?.subTitle?.title : ''
+          }
+        })
+      })
+      .flat()
+
+    // 分组，每三首歌一组
+    // new Array.fill..也是为了循环指定次数，for (const i in [0, 1, 2])也是为了循环三次
+    const result: Array<Array<any>> = new Array(Math.ceil(flatResource.length / 3))
+      .fill('')
+      .reduce((preVal: any) => {
+        const newArr = []
+        // 循环三次
+        for (const i in [0, 1, 2]) {
+          // 当第一项不为数组时
+          if (!(preVal[0] instanceof Array)) {
+            newArr.push(preVal.shift())
+          }
+        }
+
+        preVal.push(newArr)
+        return preVal
+      }, flatResource)
+
+    return {
+      title,
+      list: result
+    }
   }
 
   // 推荐歌单
@@ -104,30 +256,6 @@ export const getHomePageHandler = (blocks: any) => {
     }
   }
 
-  // 个性推荐-单曲
-  function getRcmdStyleSong(block: any) {
-    const title = block.uiElement.subTitle.title
-    const rawlist = block.creatives.map((creative: any) => {
-      return creative.resources.map((resource: any) => {
-        const uiElement = resource.uiElement
-        return {
-          title: uiElement.mainTitle.title,
-          mv: resource.resourceExtInfo.song.mv,
-          artist: pickUpName(resource.resourceExtInfo.artists),
-          picUrl: uiElement.image.imageUrl,
-          payload: resource.resourceId,
-          subTitle:
-            uiElement?.subTitle?.titleType !== 'songRcmdTag' ? uiElement?.subTitle?.title : '',
-          tags: uiElement?.subTitle?.titleType === 'songRcmdTag' ? uiElement?.subTitle?.title : ''
-        }
-      })
-    })
-    return {
-      title,
-      list: rawlist
-    }
-  }
-
   // 热门话题 HOMEPAGE_BLOCK_HOT_TOPIC
   function getHotTopic(block: any) {
     const list = block.creatives.map((creative: any) => {
@@ -144,7 +272,10 @@ export const getHomePageHandler = (blocks: any) => {
       })
     })
 
-    return list
+    return {
+      title: '热门话题',
+      list
+    }
   }
 
   //  新歌、新碟、新专辑
@@ -186,7 +317,10 @@ export const getHomePageHandler = (blocks: any) => {
       }
     })
 
-    return data
+    return {
+      title: ['新歌', '新碟', '新专辑'],
+      data: Object.values(data)
+    }
   }
 
   // 音乐日历 HOMEPAGE_MUSIC_CALENDAR
@@ -210,50 +344,6 @@ export const getHomePageHandler = (blocks: any) => {
         title: resource.uiElement.mainTitle.title,
         subTitle,
         picUrl: resource.uiElement.image.imageUrl
-      }
-    })
-
-    return {
-      title,
-      list
-    }
-  }
-
-  // 网易云音乐的雷达歌单 HOMEPAGE_BLOCK_MGC_PLAYLIST
-  function getMgcPlaylist(block: any) {
-    const title = block.uiElement.subTitle.title
-    const list = block.creatives.map((creative: any) => {
-      const resource = creative.resources[0]
-      const uiElement = creative.uiElement
-      const playCount = convertCount(resource.resourceExtInfo.playCount) || 0
-      return {
-        playCount,
-        payload: resource.resourceId,
-        type: resource.resourceType,
-        title: uiElement.mainTitle.title,
-        picUrl: uiElement.image.imageUrl
-      }
-    })
-
-    return {
-      title,
-      list
-    }
-  }
-
-  // 专属场景歌单 HOMEPAGE_BLOCK_OFFICIAL_PLAYLIST
-  function getOfcPlaylist(block: any) {
-    const title = block.uiElement.subTitle.title
-    const list = block.creatives.map((creative: any) => {
-      const resource = creative.resources[0]
-      const uiElement = creative.uiElement
-      const playCount = convertCount(resource.resourceExtInfo.playCount) || 0
-      return {
-        playCount,
-        payload: resource.resourceId,
-        type: resource.resourceType,
-        title: uiElement.mainTitle.title,
-        picUrl: uiElement.image.imageUrl
       }
     })
 
@@ -298,9 +388,13 @@ export const getHomePageHandler = (blocks: any) => {
         data[target].push(listData)
       }
     })
-
-    return data
+    return {
+      title: ['热门播客', '有声书'],
+      data: Object.values(data)
+    }
   }
+
+  // 所有结果
   return data
 }
 
