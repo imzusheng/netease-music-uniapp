@@ -2,7 +2,7 @@
 
 #### 介绍
 
-使用 uni-app 实现网易云音乐小程序、h5 等多端应用，技术栈 Vue3 + vite + pinia + ts
+Vue3 + vite + pinia + ts 实现网易云音乐小程序、h5 等多端应用，基于 uni-app
 
 #### 效果图（支持夜间模式）
 
