@@ -1,5 +1,5 @@
 {
-  "name": "build-wx",
+  "name": "netease-music-uniapp",
   "appid": "__UNI__AF0D2CB",
   "description": "",
   "versionName": "1.0.0",
@@ -50,7 +50,7 @@
   "quickapp": {},
   /* 小程序特有相关 */
   "mp-weixin": {
-    "appid": "wx2816d227f751770a",
+    "appid": "",
     "lazyCodeLoading": "requiredComponents",
     "darkmode": true,
     "setting": {

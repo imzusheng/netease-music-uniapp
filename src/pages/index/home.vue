@@ -1,8 +1,8 @@
 <!--
 Author: zusheng
 Date: 2022-05-11 20:12:08
-LastEditTime: 2022-05-16 22:09:47
-Description: 
+LastEditTime: 2022-05-16 22:46:24
+Description: 主页
 FilePath: \uni-preset-vue-vite-ts\src\pages\index\home.vue
 -->
 <script lang="ts" setup>
@@ -35,7 +35,7 @@ const data = reactive<any>({
   actionBall: []
 })
 
-Object.assign(data, store.getHomePageConfig)
+const homePageConfig = store.getHomePageConfig
 
 // 下拉刷新
 onPullDownRefresh(() => {
@@ -46,7 +46,6 @@ onPullDownRefresh(() => {
     offset: 0,
     more: true
   })
-  Object.assign(data, store.getHomePageConfig)
   init()
 })
 
@@ -80,9 +79,10 @@ function init() {
     const homePageRes = getHomePageHandler(res.data)
     const homePageResKeys = Object.keys(homePageRes)
 
-    Object.keys(data).forEach((key: string) => {
-      if (homePageResKeys.includes(data[key]?.code) && !data[key]?.disable) {
-        Object.assign(data[key], homePageRes[key])
+    Object.keys(homePageConfig).forEach((key: string) => {
+      if (homePageResKeys.includes(homePageConfig[key]?.code) && !homePageConfig[key].disable) {
+        data[key] = Object.assign(homePageConfig[key], homePageRes[key])
+        console.log(JSON.parse(JSON.stringify(data)))
       }
     })
 
@@ -105,9 +105,9 @@ async function getAllData() {
     const homePageRes = getHomePageHandler(toRaw(data.blocks))
     const homePageResKeys = Object.keys(homePageRes)
 
-    Object.keys(data).forEach((key: string) => {
-      if (homePageResKeys.includes(data[key]?.code) && !data[key]?.disable) {
-        Object.assign(data[key], homePageRes[key])
+    Object.keys(homePageConfig).forEach((key: string) => {
+      if (homePageResKeys.includes(homePageConfig[key]?.code) && !homePageConfig[key].disable) {
+        data[key] = Object.assign(homePageConfig[key], homePageRes[key])
       }
     })
 
@@ -140,7 +140,7 @@ const pageStyle = computed(() => {
     <!-- ↓ 首页banner和入口栏 -->
     <view class="home-banner">
       <!-- banner -->
-      <section-banner :list="data.homepage_banner.data" />
+      <section-banner v-if="data.homepage_banner?.data" :list="data.homepage_banner.data" />
 
       <!-- 入口按钮 -->
       <section-action-ball :data="data.actionBall" />

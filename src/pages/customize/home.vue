@@ -1,7 +1,7 @@
 <!--
 Author: zusheng
 Date: 2022-05-08 16:47:28
-LastEditTime: 2022-05-16 22:03:53
+LastEditTime: 2022-05-16 22:49:45
 Description: 用户主页
 FilePath: \uni-preset-vue-vite-ts\src\pages\customize\home.vue
 -->
@@ -34,13 +34,9 @@ const data = reactive<any>({
 onShow(() => store.setTheme('raw'))
 
 let obj: any = {}
-let i = 0
 Object.values(store.getHomePageConfig).forEach((val: any) => {
   val.time = Date.now() + val.order
-  if (!val.disable) {
-    val.top = i * 50
-    i++
-  }
+  val.top = (val.order - 1) * 50
   obj[val.order] = val
 })
 data.homePageConfig = obj
@@ -69,13 +65,9 @@ function movableChangeY(e: any, item: any) {
  */
 function orderList(homePageConfig: any) {
   let obj: any = {}
-  let i = 0
   Object.values(homePageConfig).forEach((v: any, idx: number) => {
     v.time = Date.now() + v.order
-    if (!v.disable) {
-      v.top = i * 50
-      i++
-    }
+    v.top = (v.order - 1) * 50
     obj[idx + 1] = v
   })
 
@@ -178,7 +170,6 @@ function touchStartHandler(item: any) {
  * 隐藏项目
  */
 function setDisabled(item: any) {
-  return uni.showToast({ title: '暂未开放' })
   data.homePageConfig[item.order].disable = true
   orderList(data.homePageConfig)
 }
@@ -187,18 +178,11 @@ function setDisabled(item: any) {
  * 显示项目
  */
 function setUnDisabled(item: any) {
-  return uni.showToast({ title: '暂未开放' })
   data.homePageConfig[item.order].disable = false
   orderList(data.homePageConfig)
 }
 
-const listData: any = computed(() =>
-  Object.values(data.homePageConfig).filter((v: any) => !v.disable)
-)
-
-const disListData: any = computed(() =>
-  Object.values(data.homePageConfig).filter((v: any) => v.disable)
-)
+const listData: any = computed(() => Object.values(data.homePageConfig))
 
 const pageStyle = computed(() => store.getPageMetaStyle)
 </script>
@@ -211,6 +195,18 @@ const pageStyle = computed(() => store.getPageMetaStyle)
 
   <view class="setting-home-wrap fixed-top">
     <view style="width: 100%; height: 30.7rpx"></view>
+    <view
+      style="
+        width: 100%;
+        height: 30.7rpx;
+        color: var(--theme-text-sub-color);
+        text-align: right;
+        font-size: 28rpx;
+      "
+    >
+      仅小程序支持拖拽排序，重启小程序后生效
+    </view>
+    <view style="width: 100%; height: 30.7rpx"></view>
     <movable-area
       class="setting-home-wrap__movable-area"
       :style="{ height: `${listData.length * 50}px` }"
@@ -219,7 +215,7 @@ const pageStyle = computed(() => store.getPageMetaStyle)
         v-for="(item, idx) in listData"
         :key="`${item.time}-${item.order}`"
         class="setting-home-wrap__movable-view"
-        :class="{ 'movable-active': movableStyleBg(item) }"
+        :class="{ 'movable-active': movableStyleBg(item), 'movable-disable': item.disable }"
         :style="{
           'z-index': movableStyleZidx(item)
         }"
@@ -236,34 +232,18 @@ const pageStyle = computed(() => store.getPageMetaStyle)
       >
         <view class="movable-view__spacing">
           <view class="movable-view__spacing-left">
-            <view class="movable-view__spacing-left-image-wrap" @tap="setDisabled(item)">
+            <view
+              v-if="!item.disable"
+              class="movable-view__spacing-left-image-wrap"
+              @tap="setDisabled(item)"
+            >
               <image
                 class="movable-view__spacing-left-image"
                 src="@/static/f2l.png"
                 mode="aspectFit"
               />
             </view>
-            {{ item.name }}
-          </view>
-          <view class="movable-view__spacing-right" />
-        </view>
-      </movable-view>
-    </movable-area>
-
-    <view style="width: 100%; height: 30.7rpx"></view>
-
-    <view
-      class="setting-home-wrap__movable-area"
-      :style="{ height: `${disListData.length * 50}px` }"
-    >
-      <view
-        v-for="(item, idx) in disListData"
-        :key="`${item.time}-${item.order}`"
-        class="setting-home-wrap__movable-view"
-      >
-        <view class="movable-view__spacing">
-          <view class="movable-view__spacing-left">
-            <view class="movable-view__spacing-left-image-wrap" @tap="setUnDisabled(item)">
+            <view v-else class="movable-view__spacing-left-image-wrap" @tap="setUnDisabled(item)">
               <image
                 class="movable-view__spacing-left-image"
                 src="@/static/c2v_.png"
@@ -274,8 +254,9 @@ const pageStyle = computed(() => store.getPageMetaStyle)
           </view>
           <view class="movable-view__spacing-right" />
         </view>
-      </view>
-    </view>
+      </movable-view>
+    </movable-area>
+
     <view style="width: 100%; height: 30.7rpx"></view>
   </view>
 </template>
@@ -291,10 +272,16 @@ const pageStyle = computed(() => store.getPageMetaStyle)
   padding-right: 30.7rpx;
   background-color: var(--theme-background-color);
 
+  // 正在拖动的样式
   .movable-active {
     .movable-view__spacing {
       background-color: var(--theme-background-color-clear) !important;
     }
+  }
+
+  // 隐藏的样式
+  .movable-disable {
+    opacity: 0.5;
   }
 
   .setting-home-wrap__movable-area {
