@@ -1,7 +1,7 @@
 <!--
 Author: zusheng
 Date: 2022-05-11 10:36:02
-LastEditTime: 2022-05-15 23:29:53
+LastEditTime: 2022-05-16 10:59:52
 Description: 完整版播放器界面
 FilePath: \uni-preset-vue-vite-ts\src\pages\player\index.vue
 -->
@@ -88,6 +88,9 @@ function back() {
 
 // 背景加载完成
 const backgroundLoad = ref<boolean>(false)
+function bgLoad() {
+  setTimeout(() => (backgroundLoad.value = true), 100)
+}
 </script>
 
 <template>
@@ -100,7 +103,7 @@ const backgroundLoad = ref<boolean>(false)
     <image
       :style="{ opacity: backgroundLoad ? '1' : '0' }"
       class="detail-player__bg-image"
-      @load="backgroundLoad = true"
+      @load="bgLoad"
       :src="`${playerStore.playerInfo.picUrl}?param=200y200`"
       mode="aspectFill"
     />
@@ -216,6 +219,7 @@ const backgroundLoad = ref<boolean>(false)
     z-index: 1;
     width: 100vw;
     height: 100vh;
+    opacity: 0;
     /* #ifdef H5 */
     filter: saturate(115%) brightness(70%) blur(80px);
     /* #endif */

@@ -1,7 +1,7 @@
 <!--
 Author: zusheng
 Date: 2022-05-11 13:51:28
-LastEditTime: 2022-05-16 10:43:38
+LastEditTime: 2022-05-16 10:53:00
 Description: 入口
 FilePath: \uni-preset-vue-vite-ts\src\App.vue
 -->
@@ -18,10 +18,13 @@ const userStore = useUserStore()
 const systemInfo: any = uni.getSystemInfoSync()
 
 onLaunch(() => {
-  if (['light', 'dark'].includes(systemInfo.theme)) {
-    mainStore.setTheme(systemInfo.theme)
-  } else if (['light', 'dark'].includes(uni.getStorageSync('theme'))) {
+  /**
+   * 设置主题，用户配置优先
+   */
+  if (['light', 'dark'].includes(uni.getStorageSync('theme'))) {
     mainStore.setTheme(uni.getStorageSync('theme'))
+  } else if (['light', 'dark'].includes(systemInfo.theme)) {
+    mainStore.setTheme(systemInfo.theme)
   } else {
     mainStore.setTheme('light')
   }
@@ -92,6 +95,14 @@ body {
   font-family: open sans, Helvetica, Arial, sans-serif;
   -webkit-overflow-scrolling: touch;
   box-sizing: border-box;
+}
+
+@media (prefers-color-scheme: dark) {
+  page,
+  html,
+  body {
+    background: #0e0e0e;
+  }
 }
 
 .uni-app--showtabbar uni-page-wrapper::after {
