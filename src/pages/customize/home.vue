@@ -1,7 +1,7 @@
 <!--
 Author: zusheng
 Date: 2022-05-08 16:47:28
-LastEditTime: 2022-05-16 21:31:04
+LastEditTime: 2022-05-16 22:03:53
 Description: 用户主页
 FilePath: \uni-preset-vue-vite-ts\src\pages\customize\home.vue
 -->
@@ -117,7 +117,7 @@ function touchEndHandler(item: any) {
  * 上级，向上滚动
  */
 function orderToUp(homePageConfig: any, item: any, curCount: number) {
-  const obj: any = {}
+  let obj: any = {}
   Object.values(homePageConfig).forEach((v: any) => {
     if (v.order === item.order) {
       v.order = curCount + 1
@@ -130,13 +130,19 @@ function orderToUp(homePageConfig: any, item: any, curCount: number) {
   })
 
   data.homePageConfig = obj
+
+  obj = {}
+  Object.values(data.homePageConfig).forEach((v: any, idx: number) => {
+    obj[v.code] = v
+  })
+  uni.setStorageSync('homePageConfig', obj)
 }
 
 /**
  * 降级，向下拖动
  */
 function orderToLow(homePageConfig: any, item: any, curCount: number) {
-  const obj: any = {}
+  let obj: any = {}
   Object.values(homePageConfig).forEach((v: any) => {
     if (v.order === item.order) {
       v.order = curCount
@@ -147,7 +153,14 @@ function orderToLow(homePageConfig: any, item: any, curCount: number) {
     v.time = Date.now() + v.order
     obj[v.order] = v
   })
+
   data.homePageConfig = obj
+
+  obj = {}
+  Object.values(data.homePageConfig).forEach((v: any, idx: number) => {
+    obj[v.code] = v
+  })
+  uni.setStorageSync('homePageConfig', obj)
 }
 
 /**
@@ -165,6 +178,7 @@ function touchStartHandler(item: any) {
  * 隐藏项目
  */
 function setDisabled(item: any) {
+  return uni.showToast({ title: '暂未开放' })
   data.homePageConfig[item.order].disable = true
   orderList(data.homePageConfig)
 }
@@ -173,6 +187,7 @@ function setDisabled(item: any) {
  * 显示项目
  */
 function setUnDisabled(item: any) {
+  return uni.showToast({ title: '暂未开放' })
   data.homePageConfig[item.order].disable = false
   orderList(data.homePageConfig)
 }

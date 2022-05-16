@@ -1,7 +1,7 @@
 <!--
 Author: zusheng
 Date: 2022-05-11 20:12:08
-LastEditTime: 2022-05-16 21:21:57
+LastEditTime: 2022-05-16 22:09:47
 Description: 
 FilePath: \uni-preset-vue-vite-ts\src\pages\index\home.vue
 -->
@@ -82,7 +82,7 @@ function init() {
 
     Object.keys(data).forEach((key: string) => {
       if (homePageResKeys.includes(data[key]?.code) && !data[key]?.disable) {
-        data[key] = homePageRes[key]
+        Object.assign(data[key], homePageRes[key])
       }
     })
 
@@ -107,7 +107,7 @@ async function getAllData() {
 
     Object.keys(data).forEach((key: string) => {
       if (homePageResKeys.includes(data[key]?.code) && !data[key]?.disable) {
-        data[key] = homePageRes[key]
+        Object.assign(data[key], homePageRes[key])
       }
     })
 

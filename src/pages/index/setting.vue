@@ -1,7 +1,7 @@
 <!--
 Author: zusheng
 Date: 2022-05-08 16:47:28
-LastEditTime: 2022-05-15 21:35:05
+LastEditTime: 2022-05-16 21:36:47
 Description: 用户主页
 FilePath: \uni-preset-vue-vite-ts\src\pages\index\setting.vue
 -->
@@ -34,9 +34,13 @@ function themeChange(e: any) {
 
 // 退出登录
 function exit() {
-  uni.removeStorageSync('cookie')
   userStore.$reset()
-  setTimeout(() => uni.reLaunch({ url: `./user` }), 0)
+  uni.removeStorage({
+    key: 'cookie',
+    success: function (res) {
+      setTimeout(() => uni.reLaunch({ url: `./user` }), 0)
+    }
+  })
 }
 
 // 前往登录
