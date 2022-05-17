@@ -1,7 +1,7 @@
 /*
  * @Author: zusheng
  * @Date: 2022-05-11 15:17:10
- * @LastEditTime: 2022-05-16 21:32:58
+ * @LastEditTime: 2022-05-17 09:24:37
  * @Description:
  * @FilePath: \uni-preset-vue-vite-ts\src\store\index.ts
  */
@@ -532,22 +532,25 @@ export const useStore = defineStore('main', {
     /**
      * 评论
      */
+
     /**
      * 获取歌单评论
-     * @param options.pageNo 分页参数,第 N 页,默认为 1
-     * @param options.pageSize 分页参数,每页多少条数据,默认 30
-     * @param options.sortType 排序方式, 1:按推荐排序, 2:按热度排序, 3:按时间排序
-     * @param options.cursor 当sortType为 3 时且页数不是第一页时需传入,值为上一条数据的 time
+     * @param pageNo 分页参数,第 N 页,默认为 1
+     * @param pageSize 分页参数,每页多少条数据,默认 30
+     * @param sortType 排序方式, 1:按推荐排序, 2:按热度排序, 3:按时间排序
+     * @param cursor 当sortType为 3 时且页数不是第一页时需传入,值为上一条数据的 time
+     * @param type  类型  0:歌曲  1:mv 2:歌单 3:专辑 4:电台 5:视频 6:动态
      *
      */
-    async getCommentPlaylist({
-      id = 0,
-      pageNo = 1,
-      pageSize = 100,
-      sortType = 1,
-      cursor = undefined
-    }): Promise<any> {
-      const args: any = { id, pageNo, pageSize, sortType, type: 2 }
+    async getComment(
+      id: number = 0,
+      pageNo: number = 1,
+      pageSize: number = 100,
+      sortType: number = 1,
+      cursor: any = undefined,
+      type: number
+    ): Promise<any> {
+      const args: any = { id, pageNo, pageSize, sortType, type }
       if (cursor) args.cursor = cursor
       return await get(API.COMMENT.GET_COMMENT_NEW, args, true, true)
     },
@@ -568,8 +571,24 @@ export const useStore = defineStore('main', {
      * @param id 资源id
      * @param type 0: 歌曲 1: mv 2: 歌单 3: 专辑 4: 电台 5: 视频
      */
-    async getCommentFloor(parentCommentId: number, id: number, type: number): Promise<any> {
-      const args: any = { id, parentCommentId, type }
+    async getCommentFloor(
+      parentCommentId: number,
+      id: number,
+      pageNo: number = 1,
+      pageSize: number = 100,
+      sortType: number = 1,
+      type: number,
+      beforeTime?: number
+    ): Promise<any> {
+      const args: any = {
+        id,
+        parentCommentId,
+        limit: pageSize,
+        offset: (pageNo - 1) * pageSize,
+        sortType,
+        type,
+        before: beforeTime
+      }
       return await get(API.COMMENT.GET_COMMENT_FLOOR, args, false, false)
     }
   }

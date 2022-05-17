@@ -1,7 +1,7 @@
 <!--
 Author: zusheng
 Date: 2022-05-01 23:49:11
-LastEditTime: 2022-05-16 09:24:29
+LastEditTime: 2022-05-17 09:28:48
 Description: 弹出歌曲选项
 FilePath: \uni-preset-vue-vite-ts\src\components\ThePopupSong.vue
 -->
@@ -53,6 +53,20 @@ function toArtist(data: any) {
   })
 }
 
+// 跳转到评论页面
+function toComment(data: any) {
+  uni.navigateTo({
+    url: `./comment?payload=${data.payload}&type=0`
+  })
+}
+
+// 前往专辑详情页面
+function toAlbum(data: any) {
+  uni.navigateTo({
+    url: `./playlist?id=${data.payload}&type=album`
+  })
+}
+
 const rootCdn = 'http://cdn.zusheng.club/weixin/'
 const itemList = [
   {
@@ -83,6 +97,7 @@ const itemList = [
     title: '评论',
     disabled: false,
     icon: 'ex5_b.png',
+    func: (data: any) => toComment(data),
     value: null,
     canRedirect: true
   },
@@ -104,6 +119,7 @@ const itemList = [
     title: '专辑：',
     disabled: false,
     icon: 'en0_b.png',
+    func: (data: any) => toAlbum(data),
     value: 'album',
     canRedirect: true
   },

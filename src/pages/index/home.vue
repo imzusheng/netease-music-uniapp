@@ -1,7 +1,7 @@
 <!--
 Author: zusheng
 Date: 2022-05-11 20:12:08
-LastEditTime: 2022-05-16 22:46:24
+LastEditTime: 2022-05-17 08:35:37
 Description: 主页
 FilePath: \uni-preset-vue-vite-ts\src\pages\index\home.vue
 -->
@@ -82,7 +82,6 @@ function init() {
     Object.keys(homePageConfig).forEach((key: string) => {
       if (homePageResKeys.includes(homePageConfig[key]?.code) && !homePageConfig[key].disable) {
         data[key] = Object.assign(homePageConfig[key], homePageRes[key])
-        console.log(JSON.parse(JSON.stringify(data)))
       }
     })
 

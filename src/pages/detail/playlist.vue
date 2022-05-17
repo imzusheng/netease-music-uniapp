@@ -1,3 +1,10 @@
+<!--
+Author: zusheng
+Date: 2022-05-12 12:09:15
+LastEditTime: 2022-05-17 09:31:28
+Description: 歌单详情页
+FilePath: \uni-preset-vue-vite-ts\src\pages\detail\playlist.vue
+-->
 <script lang="ts" setup>
 import ListSongs from '@/components/ListSongs.vue'
 import CardPoster from '@/components/CardPoster.vue'
@@ -16,7 +23,9 @@ const data = reactive<any>({
   // 歌单id，路由传过来的
   id: '',
   // 所有歌曲的ID
-  trackIds: []
+  trackIds: [],
+  // type playlist|album
+  type: ''
 })
 
 onShow(() => {
@@ -30,27 +39,43 @@ onPageScroll(() => {})
 onReachBottom(() => {})
 
 onLoad(query => {
-  const { id } = query
+  const { id, type = 'playlist' } = query
 
   data.id = id
+  data.type = type
 
   // 加载中
   uni.showLoading({
     title: '加载中'
   })
 
-  store.getPlaylistDetail(data.id).then(res => {
-    uni.hideLoading()
-    if (res !== undefined) {
-      Object.assign(data, res)
-      // console.log(toRaw(data))
-    } else {
-      uni.showToast({
-        title: '加载失败',
-        icon: 'error'
-      })
-    }
-  })
+  if (data.type === 'playlist') {
+    store.getPlaylistDetail(data.id).then(res => {
+      uni.hideLoading()
+      if (res !== undefined) {
+        Object.assign(data, res)
+        // console.log(toRaw(data))
+      } else {
+        uni.showToast({
+          title: '加载失败',
+          icon: 'error'
+        })
+      }
+    })
+  } else if (data.type === 'album') {
+    store.getPlaylistDetail(data.id).then(res => {
+      uni.hideLoading()
+      if (res !== undefined) {
+        Object.assign(data, res)
+        // console.log(toRaw(data))
+      } else {
+        uni.showToast({
+          title: '加载失败',
+          icon: 'error'
+        })
+      }
+    })
+  }
 })
 
 // 点击跳转到作者详情页

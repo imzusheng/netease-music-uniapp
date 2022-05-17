@@ -1,7 +1,7 @@
 <!--
 Author: zusheng
 Date: 2022-05-10 11:02:19
-LastEditTime: 2022-05-16 00:36:36
+LastEditTime: 2022-05-17 09:23:27
 Description: 评论详情页面
 FilePath: \uni-preset-vue-vite-ts\src\pages\detail\comment.vue
 -->
@@ -29,10 +29,14 @@ const data = reactive<any>({
   type: '',
   // 当前页数
   pageNo: 1,
-  // 是否是楼层评论
+  // 每页加载的数量
+  pageSize: 100,
+  // 是否是楼层评论 1是 0否
   floor: 0,
   // 父评论id，在floor=1时才有
   parentCommentId: '',
+  // 获取下一页评论的参数，在floor=1时才有
+  beforeTime: '',
   // 父评论数据
   ownerComment: {},
 
@@ -74,7 +78,7 @@ function getData() {
   })
   if (data.floor === 0) {
     store
-      .getCommentPlaylist({ id: data.id, pageNo: data.pageNo++, sortType: data.sortType })
+      .getComment(data.id, data.pageNo++, data.pageSize, data.sortType, '', data.type)
       .then((res: any) => {
         data.comment = res.data.comments
         data.more = res.data.hasMore
@@ -93,24 +97,57 @@ function getData() {
         uni.hideLoading()
       })
   } else {
-    store.getCommentFloor(data.parentCommentId, data.id, data.type).then((res: any) => {
-      uni.hideLoading()
-      data.ownerComment = res.data.ownerComment
-      data.more = res.data.hasMore
-      data.comment = res.data.comments
-      data.total = res.data.totalCount
-    })
+    store
+      .getCommentFloor(
+        data.parentCommentId,
+        data.id,
+        data.pageNo++,
+        data.pageSize,
+        data.sortType,
+        data.type
+      )
+      .then((res: any) => {
+        uni.hideLoading()
+        data.beforeTime = res.data.time
+        data.ownerComment = res.data.ownerComment
+        data.more = res.data.hasMore
+        data.comment = res.data.comments
+        data.total = res.data.totalCount
+      })
   }
 }
 
 onReachBottom(() => {
   if (data.more) {
-    store
-      .getCommentPlaylist({ id: data.id, pageNo: data.pageNo++, sortType: 2 })
-      .then((res: any) => {
-        data.comment.push(...res.data.comments)
-        data.more = res.data.hasMore
-      })
+    if (data.floor === 1) {
+      // 在子评论页面中
+      store
+        .getCommentFloor(
+          data.parentCommentId,
+          data.id,
+          data.pageNo++,
+          data.pageSize,
+          data.sortType,
+          data.type,
+          data.beforeTime
+        )
+        .then((res: any) => {
+          uni.hideLoading()
+          data.ownerComment = res.data.ownerComment
+          data.total = res.data.totalCount
+          data.beforeTime = res.data.time
+          data.more = res.data.hasMore
+          data.comment.push(...res.data.comments)
+        })
+    } else {
+      // 在评论列表主页中
+      store
+        .getComment(data.id, data.pageNo++, data.pageSize, data.sortType, '', data.type)
+        .then((res: any) => {
+          data.comment.push(...res.data.comments)
+          data.more = res.data.hasMore
+        })
+    }
   }
 })
 
@@ -139,7 +176,7 @@ function commentLike(t: boolean, cid: number, idx: number) {
 // 显示更多parentCommentId: number
 function toMore(item: any) {
   uni.navigateTo({
-    url: `./comment?payload=${data.id}&type=2&floor=1&parentCommentId=${item.commentId}`
+    url: `./comment?payload=${data.id}&type=${data.type}&floor=1&parentCommentId=${item.commentId}`
   })
 }
 
