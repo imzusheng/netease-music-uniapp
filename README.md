@@ -6,21 +6,21 @@ Vue3 + vite + pinia + ts 实现网易云音乐小程序、h5 等多端应用，�
 
 #### 效果图（支持夜间模式）
 
-![效果图](http://cdn.zusheng.club/screenshots/netease-music-uniapp/01.jpg)
+![效果图](https://demo.zusheng.club/README/netease-music-uniapp/01.jpg)
 
-![效果图](http://cdn.zusheng.club/screenshots/netease-music-uniapp/02.jpg)
+![效果图](https://demo.zusheng.club/README/netease-music-uniapp/02.jpg)
 
-![效果图](http://cdn.zusheng.club/screenshots/netease-music-uniapp/03.jpg)
+![效果图](https://demo.zusheng.club/README/netease-music-uniapp/03.jpg)
 
-![效果图](http://cdn.zusheng.club/screenshots/netease-music-uniapp/04.jpg)
+![效果图](https://demo.zusheng.club/README/netease-music-uniapp/04.jpg)
 
-![效果图](http://cdn.zusheng.club/screenshots/netease-music-uniapp/05.jpg)
+![效果图](https://demo.zusheng.club/README/netease-music-uniapp/05.jpg)
 
-![效果图](http://cdn.zusheng.club/screenshots/netease-music-uniapp/06.jpg)
+![效果图](https://demo.zusheng.club/README/netease-music-uniapp/06.jpg)
 
-![效果图](http://cdn.zusheng.club/screenshots/netease-music-uniapp/07.jpg)
+![效果图](https://demo.zusheng.club/README/netease-music-uniapp/07.jpg)
 
-![效果图](http://cdn.zusheng.club/screenshots/netease-music-uniapp/08.jpg)
+![效果图](https://demo.zusheng.club/README/netease-music-uniapp/08.jpg)
 
 - [x] 手机号登录
 - [x] 账号密码
@@ -59,5 +59,6 @@ Vue3 + vite + pinia + ts 实现网易云音乐小程序、h5 等多端应用，�
 建议下载后运行微信小程序版本
 [https://demo.zusheng.club/uni_music](https://demo.zusheng.club/uni_music)
 
-欢迎交流
+[gitee](https://gitee.com/imzusheng/netease-music-uniapp)
+
 本项目仅限学习交流使用, 不得用于商业用途
