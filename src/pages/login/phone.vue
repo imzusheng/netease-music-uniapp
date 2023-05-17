@@ -98,16 +98,16 @@ function nextStep() {
   <page-meta :page-style="mainStore.getPageMetaStyle" />
 
   <!-- ↓ 自定义导航 -->
-  <the-nav-bar :title="'手机号登陆'" :back="true" :filter="false" :bg="true" />
+  <the-nav-bar :title="'手机号登录'" :back="true" :filter="false" :bg="true" />
 
   <view class="login-at-phone">
     <view class="login-at-phone__main">
       <!-- 描述 -->
       <view class="login-at-phone__main-title-h2">
-        <text>登陆后体验更多精彩</text>
+        <text>登录后体验更多精彩</text>
       </view>
       <view class="login-at-phone__main-title-p">
-        <text>未注册手机号登陆后将自动创建账号</text>
+        <text>未注册手机号登录后将自动创建账号</text>
       </view>
 
       <!-- 手机号输入框 -->

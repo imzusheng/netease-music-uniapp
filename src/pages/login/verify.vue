@@ -154,7 +154,7 @@ function reSendCode() {
   <page-meta :page-style="store.getPageMetaStyle" />
 
   <!-- ↓ 自定义导航 -->
-  <the-nav-bar :title="'手机号登陆'" :back="true" :filter="false" :bg="true" />
+  <the-nav-bar :title="'手机号登录'" :back="true" :filter="false" :bg="true" />
 
   <view class="login-at-phone">
     <view class="login-at-phone__main">
