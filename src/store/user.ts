@@ -44,7 +44,7 @@ export const useStore = defineStore('user', {
     return {
       userId: 0,
 
-      // 登陆状态
+      // 登录状态
       auth: !!uni.getStorageSync('cookie')
     }
   },
